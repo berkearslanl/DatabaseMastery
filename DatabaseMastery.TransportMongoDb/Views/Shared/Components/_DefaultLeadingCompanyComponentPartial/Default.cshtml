@@ -1,0 +1,49 @@
+<section class="section bg-leading-company pt-95">
+    <div class="box-bg-leading"></div>
+    <div class="container">
+        <div class="text-center mb-45">
+            <h2 class="color-brand-1 mb-15">80 Yılı Aşkın Süredir <br class="d-none d-lg-block">Dünyanın Lider Şirketleri.</h2>
+            <p class="font-md color-white">İşletmenizin büyümesi için büyük bir fırsat. Sektör liderlerine sonuçlar sunuyoruz. <br class="d-none d-lg-block">İş gücümüzle gurur duyuyor ve çok çalışıyoruz.</p>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-6 mb-30">
+                <div class="cardLeadingCompany">
+                    <div class="cardImage"> <span class="img"> <img src="/templates/assets/imgs/page/homepage1/handover.png" alt="transp"></span></div>
+                    <div class="cardInfo">
+                        <h3 class="color-brand-1">+ @ViewBag.a1</h3>
+                        <p class="font-lg color-white">Güvenle Gönderilen Paket</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 mb-30">
+                <div class="cardLeadingCompany">
+                    <div class="cardImage"> <span class="img"> <img src="/templates/assets/imgs/page/homepage1/cities.png" alt="transp"></span></div>
+                    <div class="cardInfo">
+                        <h3 class="color-brand-1">+ @ViewBag.a3</h3>
+                        <p class="font-lg color-white">Dünya'da Hizmet Verilen Şehir</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 mb-30">
+                <div class="cardLeadingCompany">
+                    <div class="cardImage"> <span class="img"> <img src="/templates/assets/imgs/page/homepage1/client.png" alt="transp"></span></div>
+                    <div class="cardInfo">
+                        <h3 class="color-brand-1">+ @ViewBag.a4</h3>
+                        <p class="font-lg color-white">Memnun Müşteri</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 mb-30">
+                <div class="cardLeadingCompany">
+                    <div class="cardImage"> <span class="img"> <img src="/templates/assets/imgs/page/homepage1/company.png" alt="transp"></span></div>
+                    <div class="cardInfo">
+                        <h3 class="color-brand-1">+ @ViewBag.a5</h3>
+                        <p class="font-lg color-white">Destek Verdiğimiz Şirket</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @await Component.InvokeAsync("_DefaultCalculateShippingComponentPartial")
+
+    </div>
+</section>

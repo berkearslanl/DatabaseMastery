@@ -1,0 +1,38 @@
+@model List<ResultHowItWorkDto>
+<section class="section pt-85 bg-worldmap">
+    <div class="container">
+        <div class="text-center">
+            <img class="mb-15" src="/templates/assets/imgs/template/icons/favicon.svg" alt="transp">
+            <h2 class="color-brand-2 mb-20">Nasıl Çalışır?</h2>
+            <p class="font-md color-grey-700">Teslimat yapılacak şehirleri siz seçersiniz. Tüm teslimatlar belirli hizmet alanları dahilindedir ve teslimat hizmetleri konuma göre değişir. Mod veya gereksinim ne olursa olsun, zamanında teslimat sağlamak için ideal hızlandırılmış kargo çözümünü bulur ve ayarlarız.</p>
+        </div>
+        <div class="row mt-50">
+            <div class="col-lg-6 mb-30">
+                <div class="box-image-how">
+                    <img class="w-100" src="/templates/assets/imgs/page/homepage1/how-it-work.png" alt="transp">
+                    <div class="box-info-bottom-img">
+                        <div class="image-play"><img class="mb-15" src="/templates/assets/imgs/template/icons/play.svg" alt="transp"></div>
+                        <div class="info-play">
+                            <h4 class="color-white mb-15">Bu tutkuda 25 yıllık deneyime sahibiz</h4>
+                            <p class="font-sm color-white">Sektörde uzun yıllara dayanan tecrübemizle, müşterilerimize en kaliteli ve güvenilir lojistik çözümlerini sunuyoruz.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-30">
+                <ul class="list-how-works">
+                    @foreach (var x in Model)
+                    {
+                        <li>
+                            <div class="image-how"> <span class="img"> <img src="@x.IconUrl" alt="transp"></span></div>
+                            <div class="info-how">
+                                <h5 class="color-brand-2">@x.Title</h5>
+                                <p class="font-md color-grey-700">@x.Description</p>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>

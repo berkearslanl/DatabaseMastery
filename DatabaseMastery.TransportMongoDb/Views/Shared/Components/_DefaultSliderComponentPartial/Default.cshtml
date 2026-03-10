@@ -1,0 +1,31 @@
+﻿@model List<ResultSliderDto>
+<section class="section d-block">
+    <div class="box-swiper">
+        <div class="swiper-container swiper-group-1 swiper-banner-1">
+            <div class="swiper-wrapper">
+                @foreach (var x in Model)
+                {
+                    <div class="swiper-slide">
+                        <div class="banner-1" style="background-image:url(@x.ImageUrl)">
+                            <div class="container">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-12">
+                                        <p class="font-md color-white mb-15">@x.Title</p>
+                                        <h1 class="color-white mb-25">@Html.Raw(x.SubTitle)</h1>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <p class="font-md color-white mb-20">@x.Description</p>
+                                            </div>
+                                        </div>
+                                        <div class="box-button mt-30"><a class="btn btn-brand-1-big hover-up mr-40" href="#">Teklif Alın</a><a class="btn btn-play popup-youtube hover-up" href="https://www.youtube.com/watch?v=kCGf5uNE13I"><img src="/templates/assets/imgs/template/icons/play.svg" alt="">Sistem Nasıl Çalışır?</a></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="swiper-pagination swiper-pagination-banner"></div>
+        </div>
+    </div>
+</section>
