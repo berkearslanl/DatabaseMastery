@@ -1,0 +1,55 @@
+﻿@using System.Linq
+@model List<DatabaseMastery.HotCoffeePostgreSql.Entities.Product>
+
+@{
+    var categories = Model
+        .GroupBy(p => new { p.Category.CategoryId, p.Category.CategoryName })
+        .ToList();
+}
+<section class="menu-3colgrid-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+
+                @foreach (var categoryGroup in categories)
+                {
+                    <div class="categ-box">
+                        <div class="categ-name">
+                            <h2>@categoryGroup.Key.CategoryName</h2>
+                        </div>
+                        <div class="menu-holder menu-holder-v2">
+                            @foreach (var product in categoryGroup)
+                            {
+                                <div class="menu-post-v2 cols4">
+                                    <div class="menu-post-img-v2">
+                                        @if (!string.IsNullOrWhiteSpace(product.ImageUrl))
+                                        {
+                                            <a href="@product.ImageUrl" class="lightbox" title="@product.ProductName">
+                                                <img src="@product.ImageUrl" class="img-fluid" alt="@product.ProductName" width="400" height="400" />
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <img src="/dina-html/images/menu/placeholder.jpg" class="img-fluid" alt="@product.ProductName" width="400" height="400" />
+                                        }
+                                    </div>
+                                    <h4 class="menu-title-v2">@product.ProductName</h4>
+                                    <div class="menu-text">@product.Description</div>
+                                    <div class="menu-price-v2">₺@product.Price.ToString("N2")</div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
+                @if (!categories.Any())
+                {
+                    <div style="text-align:center; padding: 60px 20px; color: #aaa;">
+                        <p>Şu anda aktif ürün bulunmamaktadır.</p>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</section>

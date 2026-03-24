@@ -1,0 +1,43 @@
+<!-- Müşteri Metrikleri -->
+<div class="col-xl-3">
+    <div class="sec-card" style="animation-delay:.22s;">
+        <div class="card-head">
+            <div class="ch-icon" style="background:var(--purple-soft);"><i class="bi bi-people-fill" style="color:var(--purple);"></i></div>
+            <div><div class="sec-title">Müşteri Metrikleri</div><div class="sec-sub">Genel profil</div></div>
+        </div>
+        <div class="card-body">
+            <div class="mini-tl">
+                <div class="mtl-item">
+                    <div class="mtl-icon" style="background:var(--accent-soft);"><i class="bi bi-person-check-fill" style="color:var(--accent-dark);"></i></div>
+                    <div><div class="mtl-title">Tekrar Gelen</div><div class="mtl-sub">Sadık müşteri oranı</div></div>
+                    <div class="mtl-val">%@ViewBag.ReturningRate</div>
+                </div>
+                <div class="mtl-item">
+                    <div class="mtl-icon" style="background:var(--green-soft);"><i class="bi bi-person-plus-fill" style="color:var(--green);"></i></div>
+                    <div><div class="mtl-title">Yeni Müşteri</div><div class="mtl-sub">Bu ay</div></div>
+                    <div class="mtl-val">@ViewBag.NewCustomerCount</div>
+                </div>
+                <div class="mtl-item">
+                    <div class="mtl-icon" style="background:var(--blue-soft);"><i class="bi bi-people-fill" style="color:var(--blue);"></i></div>
+                    <div><div class="mtl-title">Ort. Grup</div><div class="mtl-sub">Kişi/rezervasyon</div></div>
+                    <div class="mtl-val">@ViewBag.AvgGroup</div>
+                </div>
+                <div class="mtl-item">
+                    <div class="mtl-icon" style="background:var(--yellow-soft);"><i class="bi bi-star-fill" style="color:var(--yellow);"></i></div>
+                    <div><div class="mtl-title">Yorum Oranı</div><div class="mtl-sub">Rez. başına yorum</div></div>
+                    <div class="mtl-val">%@ViewBag.ReviewRate</div>
+                </div>
+                <div class="mtl-item">
+                    <div class="mtl-icon" style="background:var(--purple-soft);"><i class="bi bi-calendar-heart-fill" style="color:var(--purple);"></i></div>
+                    <div><div class="mtl-title">En Yoğun Gün</div><div class="mtl-sub">Haftalık bazda</div></div>
+                    <div class="mtl-val">@ViewBag.BusiestDay</div>
+                </div>
+                <div class="mtl-item">
+                    <div class="mtl-icon" style="background:var(--teal-soft);"><i class="bi bi-clock-fill" style="color:var(--teal);"></i></div>
+                    <div><div class="mtl-title">En Yoğun Saat</div><div class="mtl-sub">Rezervasyon saati</div></div>
+                    <div class="mtl-val">@ViewBag.BusiestHour</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

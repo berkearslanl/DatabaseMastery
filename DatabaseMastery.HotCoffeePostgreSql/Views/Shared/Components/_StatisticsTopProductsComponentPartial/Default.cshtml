@@ -1,0 +1,61 @@
+@{
+    var products = ViewBag.TopProducts as IEnumerable<dynamic>;
+    var rnc = new[] { "rn-1", "rn-2", "rn-3", "rn-o", "rn-o" };
+    int rank = 0;
+}
+
+<!-- En İyi Ürünler -->
+<div class="col-xl-4">
+    <div class="sec-card" style="animation-delay:.18s;">
+        <div class="card-head">
+            <div class="ch-icon" style="background:var(--yellow-soft);"><i class="bi bi-trophy-fill" style="color:var(--yellow);"></i></div>
+            <div><div class="sec-title">En İyi Ürünler</div><div class="sec-sub">Puana göre sıralı top 5</div></div>
+        </div>
+        <div class="card-body">
+            <div class="rank-list">
+                @if (products != null && products.Any())
+                {
+                    @foreach (var p in products)
+                    {
+                        rank++;
+                        string rankClass = rank <= 5 ? rnc[rank - 1] : "rn-o";
+                        string imgUrl = p.ImageUrl ?? "";
+                        double avgRat = p.AvgRating;
+                        int fullStars = (int)Math.Round(avgRat);
+                        string starsHtml = new string('\u2605', fullStars) + new string('\u2606', 5 - fullStars);
+
+                        <div class="rank-item">
+                            <div class="rank-num @rankClass">@rank</div>
+                            <div class="rank-em">
+                                @if (!string.IsNullOrEmpty(imgUrl))
+                                {
+                                    <img src="@imgUrl" alt="@p.ProductName"
+                                         style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid #f0ede8;" />
+                                }
+                                else
+                                {
+                                    <i class="bi bi-basket3-fill" style="font-size:20px;color:var(--accent);"></i>
+                                }
+                            </div>
+                            <div>
+                                <div class="rank-name">@p.ProductName</div>
+                                <div class="rank-meta">@p.CategoryName · @p.ReviewCount yorum</div>
+                            </div>
+                            <div class="rank-right">
+                                <div class="rank-val">@p.AvgRating</div>
+                                <div class="rank-badge">@starsHtml</div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div style="text-align:center;padding:20px;color:var(--muted);font-size:13px;">
+                        <i class="bi bi-trophy" style="font-size:28px;display:block;margin-bottom:8px;opacity:0.3;"></i>
+                        Henüz değerlendirme yapılmamış
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en-US">
+
+	@await Component.InvokeAsync("_MenuHeadComponentPartial")
+
+<body class="body-header1">
+	@await Component.InvokeAsync("_MenuMobileMenuComponentPartial")
+
+	@await Component.InvokeAsync("_MenuNavbarComponentPartial")
+
+	@await Component.InvokeAsync("_MenuTopImageComponentPartial")
+
+	@await Component.InvokeAsync("_MenuListComponentPartial")
+
+	@await Component.InvokeAsync("_MenuFooterComponentPartial")
+
+	@await Component.InvokeAsync("_MenuScriptsComponentPartial")
+
+	@await Component.InvokeAsync("_MenuCampaignPopupComponentPartial")
+
+	@await Component.InvokeAsync("_MenuReservationPopupComponentPartial")
+
+</body>
+</html>

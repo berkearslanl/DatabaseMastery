@@ -1,0 +1,1252 @@
+﻿@model GetReservationByIdDto
+@{
+    ViewData["Title"] = "Rezervasyon Güncelle";
+    Layout = "~/Views/AdminLayout/Index.cshtml";
+}
+
+
+<style>
+    :root {
+        --accent: #e6a03c;
+        --accent-dark: #c8861e;
+        --accent-soft: rgba(230,160,60,0.10);
+        --green: #22c55e;
+        --green-soft: rgba(34,197,94,0.10);
+        --red: #ef4444;
+        --red-soft: rgba(239,68,68,0.10);
+        --orange: #f97316;
+        --orange-soft: rgba(249,115,22,0.10);
+        --border: #eeebe5;
+        --text: #1a1a1a;
+        --muted: #9a9590;
+        --radius: 14px;
+        --radius-sm: 10px;
+        --tr: all 0.2s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    /* ── PAGE HEADER ── */
+    .pg-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        animation: fadeDown 0.4s ease both;
+    }
+
+    .pg-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text);
+        margin: 0 0 4px;
+        line-height: 1.2;
+    }
+
+    .pg-desc {
+        font-size: 13px;
+        color: var(--muted);
+        margin: 0;
+    }
+
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 10px 18px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        background: #fff;
+        font-size: 13px;
+        font-weight: 600;
+        color: #555;
+        text-decoration: none;
+        transition: var(--tr);
+        box-shadow: 0 1px 5px rgba(0,0,0,0.04);
+    }
+
+        .btn-back:hover {
+            border-color: var(--accent);
+            color: var(--accent-dark);
+            background: var(--accent-soft);
+        }
+
+    /* ── UPDATE BANNER ── */
+    .update-banner {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: linear-gradient(135deg, #fffbf3, #fff4e0);
+        border: 1px solid #fde8c0;
+        border-radius: var(--radius);
+        padding: 13px 18px;
+        margin-bottom: 22px;
+        animation: fadeDown 0.4s 0.05s ease both;
+    }
+
+    .ub-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: var(--accent-soft);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        color: var(--accent-dark);
+        flex-shrink: 0;
+    }
+
+    .ub-text {
+        font-size: 13px;
+        color: #8a6830;
+        line-height: 1.5;
+        flex: 1;
+    }
+
+        .ub-text strong {
+            color: var(--accent-dark);
+            font-weight: 700;
+        }
+
+    .ub-id {
+        background: var(--accent-soft);
+        border: 1px solid #fde8c0;
+        color: var(--accent-dark);
+        font-size: 11.5px;
+        font-weight: 700;
+        padding: 4px 11px;
+        border-radius: 20px;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    /* ── LAYOUT ── */
+    .form-layout {
+        display: grid;
+        grid-template-columns: 1fr 340px;
+        gap: 22px;
+        align-items: start;
+        animation: fadeUp 0.4s 0.08s ease both;
+    }
+
+    /* ── CARD ── */
+    .form-card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+        overflow: hidden;
+    }
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 18px 22px;
+        border-bottom: 1px solid var(--border);
+        background: #fafaf8;
+    }
+
+    .card-header-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        flex-shrink: 0;
+    }
+
+    .card-header-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 14.5px;
+        font-weight: 700;
+        color: var(--text);
+        margin: 0 0 2px;
+    }
+
+    .card-header-sub {
+        font-size: 12px;
+        color: var(--muted);
+        margin: 0;
+    }
+
+    .card-body {
+        padding: 22px;
+    }
+
+    /* ── FORM GRID ── */
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 16px;
+    }
+
+        .form-row.single {
+            grid-template-columns: 1fr;
+        }
+
+        .form-row:last-child {
+            margin-bottom: 0;
+        }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .form-label {
+        font-size: 12px;
+        font-weight: 700;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+        .form-label .req {
+            color: var(--accent);
+            font-size: 13px;
+        }
+
+    /* ── CHANGED BADGE ── */
+    .changed-badge {
+        display: none;
+        align-items: center;
+        gap: 4px;
+        background: var(--orange-soft);
+        border: 1px solid rgba(249,115,22,0.25);
+        color: var(--orange);
+        font-size: 10px;
+        font-weight: 700;
+        padding: 1px 7px;
+        border-radius: 10px;
+        margin-left: 6px;
+    }
+
+        .changed-badge.show {
+            display: inline-flex;
+        }
+
+    .form-control {
+        padding: 11px 14px;
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-sm);
+        font-size: 13.5px;
+        font-family: 'DM Sans', sans-serif;
+        color: #1a1a1a !important;
+        background: #fff;
+        outline: none;
+        transition: var(--tr);
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+        .form-control:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(230,160,60,0.13);
+        }
+
+        .form-control:hover:not(:focus) {
+            border-color: #d8d4cc;
+        }
+
+        .form-control.is-invalid {
+            border-color: var(--red);
+            box-shadow: 0 0 0 3px var(--red-soft);
+        }
+
+    textarea.form-control {
+        resize: vertical;
+        min-height: 90px;
+        line-height: 1.6;
+    }
+
+    /* Input with icon */
+    .input-wrap {
+        position: relative;
+    }
+
+        .input-wrap .i-icon {
+            position: absolute;
+            left: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            color: #ccc;
+            pointer-events: none;
+            transition: var(--tr);
+        }
+
+        .input-wrap .form-control {
+            padding-left: 38px;
+        }
+
+        .input-wrap:focus-within .i-icon {
+            color: var(--accent);
+        }
+
+        .input-wrap.textarea-wrap .i-icon {
+            top: 14px;
+            transform: none;
+        }
+
+        .input-wrap.textarea-wrap .form-control {
+            padding-left: 38px;
+        }
+
+    /* Select */
+    select.form-control {
+        cursor: pointer;
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23aaa' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 14px center;
+        padding-right: 36px;
+    }
+
+    /* ── GUEST STEPPER ── */
+    .stepper {
+        display: flex;
+        align-items: center;
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-sm);
+        overflow: hidden;
+        transition: var(--tr);
+        background: #fff;
+    }
+
+        .stepper:focus-within {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(230,160,60,0.13);
+        }
+
+    .stepper-btn {
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fafaf8;
+        border: none;
+        font-size: 18px;
+        color: #888;
+        cursor: pointer;
+        transition: var(--tr);
+        flex-shrink: 0;
+        font-weight: 700;
+    }
+
+        .stepper-btn:hover {
+            background: var(--accent-soft);
+            color: var(--accent-dark);
+        }
+
+        .stepper-btn:active {
+            background: var(--accent);
+            color: #fff;
+        }
+
+    .stepper-input {
+        flex: 1;
+        border: none;
+        outline: none;
+        text-align: center;
+        font-size: 16px;
+        font-weight: 800;
+        color: var(--text);
+        font-family: 'DM Sans', sans-serif;
+        font-variant-numeric: tabular-nums;
+        background: transparent;
+    }
+
+    .stepper-label {
+        padding-right: 12px;
+        font-size: 11px;
+        color: var(--muted);
+        font-weight: 500;
+        white-space: nowrap;
+    }
+
+    /* ── STATUS SELECTOR ── */
+    .status-picker {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .status-option {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: var(--tr);
+        background: #fff;
+    }
+
+        .status-option:hover {
+            border-color: #d8d4cc;
+            background: #fdfcfa;
+        }
+
+        .status-option input[type="radio"] {
+            display: none;
+        }
+
+        .status-option.selected-beklemede {
+            border-color: #f59e0b;
+            background: rgba(245,158,11,0.07);
+        }
+
+        .status-option.selected-onaylandi {
+            border-color: var(--green);
+            background: var(--green-soft);
+        }
+
+        .status-option.selected-iptal {
+            border-color: var(--red);
+            background: var(--red-soft);
+        }
+
+    .so-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+
+    .so-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #1a1a1a !important;
+    }
+
+    .so-check {
+        margin-left: auto;
+        font-size: 16px;
+        opacity: 0;
+        transition: var(--tr);
+    }
+
+    .status-option.selected-beklemede .so-check,
+    .status-option.selected-onaylandi .so-check,
+    .status-option.selected-iptal .so-check {
+        opacity: 1;
+    }
+
+    /* ── CHANGES CARD ── */
+    .changes-card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+        overflow: hidden;
+        display: none;
+        margin-bottom: 16px;
+    }
+
+        .changes-card.show {
+            display: block;
+        }
+
+    .changes-head {
+        padding: 12px 16px;
+        border-bottom: 1px solid #f5f2ee;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #fffbf3;
+    }
+
+    .changes-title {
+        font-size: 12.5px;
+        font-weight: 700;
+        color: var(--accent-dark);
+    }
+
+    .changes-count {
+        margin-left: auto;
+        background: var(--accent);
+        color: #fff;
+        font-size: 10.5px;
+        font-weight: 800;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .change-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        border-bottom: 1px solid #f9f7f4;
+        font-size: 12px;
+    }
+
+        .change-item:last-child {
+            border-bottom: none;
+        }
+
+    .ci-field {
+        font-weight: 700;
+        color: #6b6460;
+        min-width: 70px;
+        flex-shrink: 0;
+    }
+
+    .ci-old {
+        color: #bbb;
+        text-decoration: line-through;
+        max-width: 80px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .ci-arrow {
+        color: #ccc;
+        font-size: 10px;
+        flex-shrink: 0;
+    }
+
+    .ci-new {
+        color: #16a34a;
+        font-weight: 600;
+        max-width: 80px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* ── SUMMARY CARD ── */
+    .summary-card {
+        background: linear-gradient(145deg, #1a1a1a 0%, #2d2a26 100%);
+        border-radius: var(--radius);
+        padding: 22px;
+        color: #fff;
+    }
+
+    .summary-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 15px;
+        font-weight: 700;
+        margin-bottom: 18px;
+        color: rgba(255,255,255,0.9);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .summary-title i {
+            color: var(--accent);
+        }
+
+    .summary-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 13px;
+    }
+
+        .summary-row:last-of-type {
+            margin-bottom: 0;
+        }
+
+    .sr-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        background: rgba(255,255,255,0.07);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        color: var(--accent);
+        flex-shrink: 0;
+        margin-top: 1px;
+    }
+
+    .sr-lbl {
+        font-size: 10.5px;
+        color: rgba(255,255,255,0.4);
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        margin-bottom: 2px;
+    }
+
+    .sr-val {
+        font-size: 13px;
+        font-weight: 600;
+        color: rgba(255,255,255,0.88);
+        min-height: 18px;
+    }
+
+    .summary-divider {
+        border: none;
+        border-top: 1px solid rgba(255,255,255,0.08);
+        margin: 16px 0;
+    }
+
+    /* ── SUBMIT BUTTON ── */
+    .btn-submit {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+        color: #fff !important;
+        border: none;
+        border-radius: var(--radius-sm);
+        font-size: 14px;
+        font-weight: 700;
+        font-family: 'DM Sans', sans-serif;
+        cursor: pointer;
+        transition: var(--tr);
+        box-shadow: 0 4px 16px rgba(230,160,60,0.30);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        letter-spacing: 0.01em;
+        margin-top: 16px;
+        text-decoration: none;
+    }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(230,160,60,0.42);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+    .btn-cancel-form {
+        width: 100%;
+        padding: 12px;
+        background: transparent;
+        color: rgba(255,255,255,0.5) !important;
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: var(--radius-sm);
+        font-size: 13px;
+        font-weight: 600;
+        font-family: 'DM Sans', sans-serif;
+        cursor: pointer;
+        transition: var(--tr);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        text-decoration: none;
+        margin-top: 8px;
+    }
+
+        .btn-cancel-form:hover {
+            background: rgba(255,255,255,0.07);
+            color: rgba(255,255,255,0.75) !important;
+        }
+
+    /* ── TIPS CARD ── */
+    .tips-card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+        margin-top: 16px;
+    }
+
+    .tips-title {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .tip-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 9px;
+        margin-bottom: 10px;
+        font-size: 12.5px;
+        color: #666;
+        line-height: 1.5;
+    }
+
+        .tip-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .tip-item i {
+            color: var(--accent);
+            font-size: 13px;
+            margin-top: 1px;
+            flex-shrink: 0;
+        }
+
+    /* ── VALIDATION ── */
+    .field-error {
+        font-size: 11.5px;
+        color: var(--red);
+        margin-top: 3px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    /* ── ANIMATIONS ── */
+    @@keyframes fadeDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes fadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(14px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ── RESPONSIVE ── */
+    @@media (max-width: 1100px) {
+        .form-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .sidebar-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+    }
+
+    @@media (max-width: 767.98px) {
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+
+        .sidebar-col {
+            grid-template-columns: 1fr;
+        }
+
+        .ub-id {
+            display: none;
+        }
+    }
+</style>
+
+<!-- ── PAGE HEADER ── -->
+<div class="pg-header">
+    <div>
+        <h1 class="pg-title">
+            <i class="bi bi-calendar2-week-fill me-2" style="color:var(--accent);font-size:20px;vertical-align:middle;"></i>
+            Rezervasyon Güncelle
+        </h1>
+        <p class="pg-desc">Mevcut rezervasyon bilgilerini düzenleyin.</p>
+    </div>
+    <a href="/Reservation/ReservationList/" class="btn-back">
+        <i class="bi bi-arrow-left"></i>
+        Listeye Dön
+    </a>
+</div>
+
+<!-- ── UPDATE BANNER ── -->
+<div class="update-banner">
+    <div class="ub-icon"><i class="bi bi-pencil-fill"></i></div>
+    <div class="ub-text">
+        <strong>@Model.Name</strong> adlı müşteriye ait rezervasyonu düzenliyorsunuz.
+        Değişiklikler kaydedilene kadar uygulanmaz.
+    </div>
+    <span class="ub-id">#@Model.ReservationId</span>
+</div>
+
+<form asp-action="UpdateReservation" method="post" id="resForm" novalidate>
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="ReservationId" />
+
+    <div class="form-layout">
+
+        <!-- ═══════════════════ SOL KOLON ═══════════════════ -->
+        <div>
+
+            <!-- MÜŞTERİ BİLGİLERİ -->
+            <div class="form-card" style="margin-bottom:18px;">
+                <div class="card-header">
+                    <div class="card-header-icon" style="background:var(--accent-soft);">
+                        <i class="bi bi-person-fill" style="color:var(--accent-dark);"></i>
+                    </div>
+                    <div>
+                        <p class="card-header-title">Müşteri Bilgileri</p>
+                        <p class="card-header-sub">Ad, iletişim ve e-posta bilgilerini güncelleyin.</p>
+                    </div>
+                </div>
+                <div class="card-body">
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="bi bi-person"></i> Ad Soyad <span class="req">*</span>
+                                <span class="changed-badge" id="badge-name"><i class="bi bi-arrow-repeat"></i> Değişti</span>
+                            </label>
+                            <div class="input-wrap">
+                                <i class="bi bi-person i-icon"></i>
+                                <input asp-for="Name" class="form-control" placeholder="Ahmet Yılmaz"
+                                       id="inpName" oninput="onFieldChange(this, 'name')" />
+                            </div>
+                            <span asp-validation-for="Name" class="field-error"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="bi bi-telephone"></i> Telefon <span class="req">*</span>
+                                <span class="changed-badge" id="badge-phone"><i class="bi bi-arrow-repeat"></i> Değişti</span>
+                            </label>
+                            <div class="input-wrap">
+                                <i class="bi bi-telephone i-icon"></i>
+                                <input asp-for="Phone" class="form-control" placeholder="0532 000 00 00"
+                                       id="inpPhone" oninput="onFieldChange(this, 'phone')" />
+                            </div>
+                            <span asp-validation-for="Phone" class="field-error"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-row single">
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="bi bi-envelope"></i> E-posta
+                                <span class="changed-badge" id="badge-email"><i class="bi bi-arrow-repeat"></i> Değişti</span>
+                            </label>
+                            <div class="input-wrap">
+                                <i class="bi bi-envelope i-icon"></i>
+                                <input asp-for="Email" class="form-control" placeholder="ornek@mail.com"
+                                       type="email" id="inpEmail" oninput="onFieldChange(this, 'email')" />
+                            </div>
+                            <span asp-validation-for="Email" class="field-error"></span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- REZERVASYON DETAYLARI -->
+            <div class="form-card" style="margin-bottom:18px;">
+                <div class="card-header">
+                    <div class="card-header-icon" style="background:rgba(59,130,246,0.10);">
+                        <i class="bi bi-calendar2-check" style="color:#3b82f6;"></i>
+                    </div>
+                    <div>
+                        <p class="card-header-title">Rezervasyon Detayları</p>
+                        <p class="card-header-sub">Tarih, saat ve kişi sayısını güncelleyin.</p>
+                    </div>
+                </div>
+                <div class="card-body">
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="bi bi-calendar3"></i> Tarih <span class="req">*</span>
+                                <span class="changed-badge" id="badge-date"><i class="bi bi-arrow-repeat"></i> Değişti</span>
+                            </label>
+                            <div class="input-wrap">
+                                <i class="bi bi-calendar3 i-icon"></i>
+                                <input asp-for="ReservationDate" type="date" class="form-control"
+                                       id="inpDate" oninput="onFieldChange(this, 'date')" />
+                            </div>
+                            <span asp-validation-for="ReservationDate" class="field-error"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="bi bi-clock"></i> Saat <span class="req">*</span>
+                                <span class="changed-badge" id="badge-time"><i class="bi bi-arrow-repeat"></i> Değişti</span>
+                            </label>
+                            <div class="input-wrap">
+                                <i class="bi bi-clock i-icon"></i>
+                                <input asp-for="ReservationTime" type="time" class="form-control"
+                                       id="inpTime" oninput="onFieldChange(this, 'time')" />
+                            </div>
+                            <span asp-validation-for="ReservationTime" class="field-error"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-row single">
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="bi bi-people"></i> Kişi Sayısı <span class="req">*</span>
+                                <span class="changed-badge" id="badge-guest"><i class="bi bi-arrow-repeat"></i> Değişti</span>
+                            </label>
+                            <div class="stepper">
+                                <button type="button" class="stepper-btn" onclick="changeGuest(-1)">−</button>
+                                <input asp-for="GuestCount" type="number" class="stepper-input"
+                                       id="inpGuest" min="1" max="50"
+                                       oninput="onFieldChange(this, 'guest')" readonly />
+                                <span class="stepper-label">kişi</span>
+                                <button type="button" class="stepper-btn" onclick="changeGuest(1)">+</button>
+                            </div>
+                            <span asp-validation-for="GuestCount" class="field-error"></span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ÖZEL NOT -->
+            <div class="form-card">
+                <div class="card-header">
+                    <div class="card-header-icon" style="background:#f5f2ee;">
+                        <i class="bi bi-chat-square-text" style="color:#aaa;"></i>
+                    </div>
+                    <div>
+                        <p class="card-header-title">Özel İstek / Not</p>
+                        <p class="card-header-sub">Müşterinin isteği veya özel notlar.</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="form-label" style="text-transform:none;letter-spacing:0;font-size:12px;">
+                            Not
+                            <span class="changed-badge" id="badge-desc"><i class="bi bi-arrow-repeat"></i> Değişti</span>
+                        </label>
+                        <div class="input-wrap textarea-wrap">
+                            <i class="bi bi-chat-square-dots i-icon"></i>
+                            <textarea asp-for="Description" class="form-control" id="inpDesc"
+                                      placeholder="Doğum günü kutlaması, vejetaryen menü, yüksek sandalye gibi özel istekler..."
+                                      rows="4" oninput="onFieldChange(this, 'desc')"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ═══════════════════ SAĞ KOLON ═══════════════════ -->
+        <div class="sidebar-col">
+
+            <!-- DURUM SEÇİCİ -->
+            <div class="form-card" style="margin-bottom:16px;">
+                <div class="card-header">
+                    <div class="card-header-icon" style="background:#f5f2ee;">
+                        <i class="bi bi-toggle-on" style="color:#aaa;"></i>
+                    </div>
+                    <div>
+                        <p class="card-header-title">Rezervasyon Durumu</p>
+                        <p class="card-header-sub">
+                            Durumu güncelleyin.
+                            <span class="changed-badge" id="badge-status" style="display:none;"><i class="bi bi-arrow-repeat"></i> Değişti</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <input asp-for="Status" type="hidden" id="hiddenStatus" />
+                    <div class="status-picker">
+                        <label class="status-option" id="opt-beklemede" onclick="selectStatus('Beklemede')">
+                            <span class="so-dot" style="background:#f59e0b;"></span>
+                            <span class="so-label">Beklemede</span>
+                            <i class="bi bi-check-circle-fill so-check" style="color:#f59e0b;"></i>
+                        </label>
+                        <label class="status-option" id="opt-onaylandi" onclick="selectStatus('Onaylandı')">
+                            <span class="so-dot" style="background:var(--green);"></span>
+                            <span class="so-label">Onaylandı</span>
+                            <i class="bi bi-check-circle-fill so-check" style="color:var(--green);"></i>
+                        </label>
+                        <label class="status-option" id="opt-iptal" onclick="selectStatus('İptal Edildi')">
+                            <span class="so-dot" style="background:var(--red);"></span>
+                            <span class="so-label">İptal Edildi</span>
+                            <i class="bi bi-check-circle-fill so-check" style="color:var(--red);"></i>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DEĞİŞİKLİK ÖZETİ -->
+            <div class="changes-card" id="changesCard">
+                <div class="changes-head">
+                    <i class="bi bi-arrow-repeat" style="color:var(--accent-dark);font-size:14px;"></i>
+                    <span class="changes-title">Değişiklikler</span>
+                    <span class="changes-count" id="changesCount">0</span>
+                </div>
+                <div id="changesList"></div>
+            </div>
+
+            <!-- ÖZET KARTI -->
+            <div class="summary-card">
+                <div class="summary-title">
+                    <i class="bi bi-receipt"></i>
+                    Rezervasyon Özeti
+                </div>
+
+                <div class="summary-row">
+                    <div class="sr-icon"><i class="bi bi-person-fill"></i></div>
+                    <div>
+                        <div class="sr-lbl">Misafir</div>
+                        <div class="sr-val" id="sumName">—</div>
+                    </div>
+                </div>
+
+                <div class="summary-row">
+                    <div class="sr-icon"><i class="bi bi-telephone-fill"></i></div>
+                    <div>
+                        <div class="sr-lbl">Telefon</div>
+                        <div class="sr-val" id="sumPhone">—</div>
+                    </div>
+                </div>
+
+                <hr class="summary-divider" />
+
+                <div class="summary-row">
+                    <div class="sr-icon"><i class="bi bi-calendar3"></i></div>
+                    <div>
+                        <div class="sr-lbl">Tarih</div>
+                        <div class="sr-val" id="sumDate">—</div>
+                    </div>
+                </div>
+
+                <div class="summary-row">
+                    <div class="sr-icon"><i class="bi bi-clock-fill"></i></div>
+                    <div>
+                        <div class="sr-lbl">Saat</div>
+                        <div class="sr-val" id="sumTime">—</div>
+                    </div>
+                </div>
+
+                <div class="summary-row">
+                    <div class="sr-icon"><i class="bi bi-people-fill"></i></div>
+                    <div>
+                        <div class="sr-lbl">Kişi Sayısı</div>
+                        <div class="sr-val" id="sumGuest">—</div>
+                    </div>
+                </div>
+
+                <hr class="summary-divider" />
+
+                <div class="summary-row">
+                    <div class="sr-icon"><i class="bi bi-circle-fill"></i></div>
+                    <div>
+                        <div class="sr-lbl">Durum</div>
+                        <div class="sr-val" id="sumStatus">—</div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <i class="bi bi-check-circle-fill"></i>
+                    Değişiklikleri Kaydet
+                </button>
+
+                <a href="/Reservation/ReservationList/" class="btn-cancel-form">
+                    <i class="bi bi-x-lg"></i>
+                    Vazgeç
+                </a>
+            </div>
+
+            <!-- İPUÇLARI -->
+            <div class="tips-card">
+                <div class="tips-title">
+                    <i class="bi bi-lightbulb-fill" style="color:var(--accent);"></i>
+                    Güncelleme İpuçları
+                </div>
+                <div class="tip-item">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <span>Sadece değiştirmek istediğiniz alanları düzenleyin.</span>
+                </div>
+                <div class="tip-item">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <span>Durumu "Onaylandı" yaparsanız müşteri bilgilendirilir.</span>
+                </div>
+                <div class="tip-item">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <span>İptal edilen rezervasyonlar listede görünmeye devam eder.</span>
+                </div>
+                <div class="tip-item">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <span>Kaydet butonuna basmadan sayfayı kapatmayın.</span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        /* ── ORİJİNAL DEĞERLER (değişiklik takibi) ── */
+        var orig = {
+            name:   @Html.Raw(Json.Serialize(Model.Name ?? "")),
+            phone:  @Html.Raw(Json.Serialize(Model.Phone ?? "")),
+            email:  @Html.Raw(Json.Serialize(Model.Email ?? "")),
+            date:   '@(Model.ReservationDate.ToString("yyyy-MM-dd"))',
+            time:   '@Model.ReservationTime',
+            guest:  '@Model.GuestCount',
+            desc:   @Html.Raw(Json.Serialize(Model.Description ?? "")),
+            status: @Html.Raw(Json.Serialize(Model.Status ?? "Beklemede"))
+        };
+
+        var changes = {};
+
+        var TR_DAYS   = ['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
+        var TR_MONTHS = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran',
+                         'Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+
+        var fieldLabels = {
+            name: 'Ad Soyad', phone: 'Telefon', email: 'E-posta',
+            date: 'Tarih', time: 'Saat', guest: 'Kişi', desc: 'Not', status: 'Durum'
+        };
+
+        /* ── INIT ── */
+        document.addEventListener('DOMContentLoaded', function () {
+            updateSummary();
+            /* Mevcut durumu seç */
+            selectStatus(orig.status, true);
+        });
+
+        /* ── ALAN DEĞİŞİKLİK TAKİBİ ── */
+        function onFieldChange(el, field) {
+            trackChange(field, el.value);
+            updateSummary();
+        }
+
+        function trackChange(field, newVal) {
+            var oldVal = String(orig[field] || '').trim();
+            var newStr = String(newVal || '').trim();
+            var badge  = document.getElementById('badge-' + field);
+
+            if (newStr !== oldVal && newStr !== '') {
+                changes[field] = { label: fieldLabels[field], old: oldVal, new: newStr };
+                if (badge) badge.classList.add('show');
+            } else {
+                delete changes[field];
+                if (badge) badge.classList.remove('show');
+            }
+            renderChanges();
+        }
+
+        function renderChanges() {
+            var keys = Object.keys(changes);
+            var card = document.getElementById('changesCard');
+            var list = document.getElementById('changesList');
+            var cnt  = document.getElementById('changesCount');
+
+            if (keys.length === 0) { card.classList.remove('show'); return; }
+            card.classList.add('show');
+            cnt.textContent = keys.length;
+
+            list.innerHTML = keys.map(function(k) {
+                var c = changes[k];
+                return '<div class="change-item">' +
+                    '<span class="ci-field">' + c.label + '</span>' +
+                    '<span class="ci-old">' + (c.old || '—') + '</span>' +
+                    '<span class="ci-arrow"><i class="bi bi-arrow-right"></i></span>' +
+                    '<span class="ci-new">' + c.new + '</span>' +
+                '</div>';
+            }).join('');
+        }
+
+        /* ── GUEST STEPPER ── */
+        function changeGuest(delta) {
+            var inp = document.getElementById('inpGuest');
+            var val = parseInt(inp.value) || 1;
+            val = Math.min(50, Math.max(1, val + delta));
+            inp.value = val;
+            trackChange('guest', String(val));
+            updateSummary();
+        }
+
+        /* ── STATUS SELECTOR ── */
+        var statusMap = {
+            'Beklemede':    'opt-beklemede',
+            'Onaylandı':    'opt-onaylandi',
+            'İptal Edildi': 'opt-iptal'
+        };
+        var statusClassMap = {
+            'Beklemede':    'selected-beklemede',
+            'Onaylandı':    'selected-onaylandi',
+            'İptal Edildi': 'selected-iptal'
+        };
+
+        function selectStatus(val, isInit) {
+            document.getElementById('hiddenStatus').value = val;
+
+            Object.keys(statusMap).forEach(function(k) {
+                document.getElementById(statusMap[k]).className = 'status-option';
+            });
+
+            var target = document.getElementById(statusMap[val]);
+            if (target) target.classList.add(statusClassMap[val]);
+
+            if (!isInit) {
+                trackChange('status', val);
+                /* badge status için özel konum (card-header-sub içinde) */
+                var badge = document.getElementById('badge-status');
+                if (badge) {
+                    if (val !== orig.status) {
+                        badge.style.display = 'inline-flex';
+                    } else {
+                        badge.style.display = 'none';
+                        delete changes['status'];
+                        renderChanges();
+                    }
+                }
+            }
+
+            updateSummary();
+        }
+
+        /* ── LIVE SUMMARY ── */
+        function updateSummary() {
+            var name = (document.getElementById('inpName').value || '').trim();
+            document.getElementById('sumName').textContent = name || '—';
+
+            var phone = (document.getElementById('inpPhone').value || '').trim();
+            document.getElementById('sumPhone').textContent = phone || '—';
+
+            var dateVal = document.getElementById('inpDate').value;
+            if (dateVal) {
+                var d = new Date(dateVal + 'T00:00:00');
+                var fmt = TR_DAYS[d.getDay()] + ', ' + d.getDate() + ' ' +
+                          TR_MONTHS[d.getMonth()] + ' ' + d.getFullYear();
+                document.getElementById('sumDate').textContent = fmt;
+            } else {
+                document.getElementById('sumDate').textContent = '—';
+            }
+
+            var timeVal = document.getElementById('inpTime').value;
+            document.getElementById('sumTime').textContent = timeVal || '—';
+
+            var guest = parseInt(document.getElementById('inpGuest').value) || 1;
+            document.getElementById('sumGuest').textContent = guest + ' kişi';
+
+            document.getElementById('sumStatus').textContent =
+                document.getElementById('hiddenStatus').value || '—';
+        }
+    </script>
+}
+
+

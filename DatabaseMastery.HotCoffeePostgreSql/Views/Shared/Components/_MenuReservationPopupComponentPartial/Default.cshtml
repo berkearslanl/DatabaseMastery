@@ -1,0 +1,258 @@
+<!-- Reservation Modal Overlay -->
+<div id="resModal" style="
+    display:none; position:fixed; inset:0; z-index:1050;
+    background:rgba(0,0,0,0.55); backdrop-filter:blur(4px);
+    align-items:center; justify-content:center; padding:20px;
+">
+    <div style="
+        background:#fff; border-radius:20px; max-width:520px; width:100%;
+        box-shadow:0 24px 64px rgba(0,0,0,0.2); overflow:hidden;
+        animation:resModalIn 0.35s ease both; max-height:90vh; display:flex; flex-direction:column;
+    ">
+        <!-- Header -->
+        <div style="padding:24px 24px 18px; border-bottom:1px solid #f0ede8; flex-shrink:0;">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <div style="width:42px;height:42px;background:linear-gradient(135deg,rgba(230,160,60,0.15),rgba(230,160,60,0.08));border-radius:12px;display:flex;align-items:center;justify-content:center;">
+                        <i class="fa fa-calendar-check-o" style="font-size:18px;color:#c8861e;"></i>
+                    </div>
+                    <div>
+                        <div style="font-family:'Lora',serif;font-size:18px;font-weight:700;color:#1a1a1a;">Rezervasyon Yap</div>
+                        <div style="font-size:12px;color:#999;">Masanızı hemen ayırtın</div>
+                    </div>
+                </div>
+                <button onclick="closeResModal()" style="
+                    width:34px;height:34px;border-radius:10px;border:1px solid #eeebe5;background:#fff;
+                    display:flex;align-items:center;justify-content:center;font-size:16px;color:#999;cursor:pointer;
+                    transition:all 0.2s;
+                " onmouseover="this.style.background='#f5f2ee'" onmouseout="this.style.background='#fff'">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Form -->
+        <div style="padding:20px 24px 24px; overflow-y:auto; flex:1;">
+            <form id="resForm" onsubmit="submitReservation(event)">
+
+                <!-- Ad Soyad -->
+                <div style="margin-bottom:16px;">
+                    <label style="display:block;font-size:12.5px;font-weight:600;color:#555;margin-bottom:6px;">
+                        <i class="fa fa-user" style="width:16px;color:#c8861e;"></i> Ad Soyad *
+                    </label>
+                    <input type="text" id="resName" required placeholder="Adınız ve soyadınız" style="
+                        width:100%;padding:11px 14px;border:1.5px solid #e8e5e0;border-radius:10px;
+                        font-size:14px;font-family:'DM Sans','Poppins',sans-serif;color:#1a1a1a;
+                        outline:none;transition:border-color 0.2s;background:#fdfcfb;
+                    " onfocus="this.style.borderColor='#e6a03c'" onblur="this.style.borderColor='#e8e5e0'" />
+                </div>
+
+                <!-- Telefon & Email -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+                    <div>
+                        <label style="display:block;font-size:12.5px;font-weight:600;color:#555;margin-bottom:6px;">
+                            <i class="fa fa-phone" style="width:16px;color:#c8861e;"></i> Telefon *
+                        </label>
+                        <input type="tel" id="resPhone" required placeholder="0555 123 4567" style="
+                            width:100%;padding:11px 14px;border:1.5px solid #e8e5e0;border-radius:10px;
+                            font-size:14px;font-family:'DM Sans','Poppins',sans-serif;color:#1a1a1a;
+                            outline:none;transition:border-color 0.2s;background:#fdfcfb;
+                        " onfocus="this.style.borderColor='#e6a03c'" onblur="this.style.borderColor='#e8e5e0'" />
+                    </div>
+                    <div>
+                        <label style="display:block;font-size:12.5px;font-weight:600;color:#555;margin-bottom:6px;">
+                            <i class="fa fa-envelope" style="width:16px;color:#c8861e;"></i> E-posta
+                        </label>
+                        <input type="email" id="resEmail" placeholder="ornek@mail.com" style="
+                            width:100%;padding:11px 14px;border:1.5px solid #e8e5e0;border-radius:10px;
+                            font-size:14px;font-family:'DM Sans','Poppins',sans-serif;color:#1a1a1a;
+                            outline:none;transition:border-color 0.2s;background:#fdfcfb;
+                        " onfocus="this.style.borderColor='#e6a03c'" onblur="this.style.borderColor='#e8e5e0'" />
+                    </div>
+                </div>
+
+                <!-- Tarih & Saat -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+                    <div>
+                        <label style="display:block;font-size:12.5px;font-weight:600;color:#555;margin-bottom:6px;">
+                            <i class="fa fa-calendar" style="width:16px;color:#c8861e;"></i> Tarih *
+                        </label>
+                        <input type="date" id="resDate" required style="
+                            width:100%;padding:11px 14px;border:1.5px solid #e8e5e0;border-radius:10px;
+                            font-size:14px;font-family:'DM Sans','Poppins',sans-serif;color:#1a1a1a;
+                            outline:none;transition:border-color 0.2s;background:#fdfcfb;
+                        " onfocus="this.style.borderColor='#e6a03c'" onblur="this.style.borderColor='#e8e5e0'" />
+                    </div>
+                    <div>
+                        <label style="display:block;font-size:12.5px;font-weight:600;color:#555;margin-bottom:6px;">
+                            <i class="fa fa-clock-o" style="width:16px;color:#c8861e;"></i> Saat *
+                        </label>
+                        <input type="time" id="resTime" required style="
+                            width:100%;padding:11px 14px;border:1.5px solid #e8e5e0;border-radius:10px;
+                            font-size:14px;font-family:'DM Sans','Poppins',sans-serif;color:#1a1a1a;
+                            outline:none;transition:border-color 0.2s;background:#fdfcfb;
+                        " onfocus="this.style.borderColor='#e6a03c'" onblur="this.style.borderColor='#e8e5e0'" />
+                    </div>
+                </div>
+
+                <!-- Kişi Sayısı -->
+                <div style="margin-bottom:16px;">
+                    <label style="display:block;font-size:12.5px;font-weight:600;color:#555;margin-bottom:6px;">
+                        <i class="fa fa-users" style="width:16px;color:#c8861e;"></i> Kişi Sayısı *
+                    </label>
+                    <div style="display:flex;align-items:center;gap:12px;">
+                        <button type="button" onclick="changeGuest(-1)" style="
+                            width:38px;height:38px;border-radius:10px;border:1.5px solid #e8e5e0;background:#fdfcfb;
+                            font-size:18px;color:#c8861e;cursor:pointer;display:flex;align-items:center;justify-content:center;
+                            transition:all 0.2s;
+                        " onmouseover="this.style.background='#f5f0e8'" onmouseout="this.style.background='#fdfcfb'">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <span id="resGuestDisplay" style="
+                            font-size:20px;font-weight:700;color:#1a1a1a;min-width:40px;text-align:center;
+                        ">2</span>
+                        <input type="hidden" id="resGuest" value="2" />
+                        <button type="button" onclick="changeGuest(1)" style="
+                            width:38px;height:38px;border-radius:10px;border:1.5px solid #e8e5e0;background:#fdfcfb;
+                            font-size:18px;color:#c8861e;cursor:pointer;display:flex;align-items:center;justify-content:center;
+                            transition:all 0.2s;
+                        " onmouseover="this.style.background='#f5f0e8'" onmouseout="this.style.background='#fdfcfb'">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                        <span style="font-size:13px;color:#999;">kişi</span>
+                    </div>
+                </div>
+
+                <!-- Not -->
+                <div style="margin-bottom:20px;">
+                    <label style="display:block;font-size:12.5px;font-weight:600;color:#555;margin-bottom:6px;">
+                        <i class="fa fa-pencil" style="width:16px;color:#c8861e;"></i> Özel Not
+                    </label>
+                    <textarea id="resDesc" rows="3" placeholder="Doğum günü, alerjiler, pencere kenarı tercihi vb." style="
+                        width:100%;padding:11px 14px;border:1.5px solid #e8e5e0;border-radius:10px;
+                        font-size:14px;font-family:'DM Sans','Poppins',sans-serif;color:#1a1a1a;
+                        outline:none;transition:border-color 0.2s;background:#fdfcfb;resize:vertical;
+                    " onfocus="this.style.borderColor='#e6a03c'" onblur="this.style.borderColor='#e8e5e0'"></textarea>
+                </div>
+
+                <!-- Message Area -->
+                <div id="resMessage" style="display:none;padding:12px 16px;border-radius:10px;margin-bottom:16px;font-size:13.5px;font-weight:600;"></div>
+
+                <!-- Submit -->
+                <button type="submit" id="resSubmitBtn" style="
+                    width:100%;padding:14px;border:none;border-radius:12px;
+                    background:linear-gradient(135deg,#e6a03c,#c8861e);color:#fff;
+                    font-size:15px;font-weight:700;font-family:'DM Sans','Poppins',sans-serif;
+                    cursor:pointer;transition:all 0.22s;
+                    box-shadow:0 4px 16px rgba(230,160,60,0.35);
+                    display:flex;align-items:center;justify-content:center;gap:8px;
+                " onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 28px rgba(230,160,60,0.45)'"
+                   onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(230,160,60,0.35)'">
+                    <i class="fa fa-check-circle"></i>
+                    Rezervasyonu Onayla
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    @@keyframes resModalIn {
+        from { opacity:0; transform:scale(0.92) translateY(20px); }
+        to { opacity:1; transform:scale(1) translateY(0); }
+    }
+    #resModal.show { display:flex !important; }
+</style>
+
+<script>
+    // Set min date to today
+    (function () {
+        var today = new Date().toISOString().split('T')[0];
+        var dateInput = document.getElementById('resDate');
+        if (dateInput) dateInput.setAttribute('min', today);
+    })();
+
+    function openResModal() {
+        document.getElementById('resModal').classList.add('show');
+    }
+
+    function closeResModal() {
+        document.getElementById('resModal').classList.remove('show');
+    }
+
+    // Close on overlay click
+    document.getElementById('resModal').addEventListener('click', function (e) {
+        if (e.target === this) closeResModal();
+    });
+
+    // Guest count +/-
+    function changeGuest(delta) {
+        var input = document.getElementById('resGuest');
+        var display = document.getElementById('resGuestDisplay');
+        var val = parseInt(input.value) + delta;
+        if (val < 1) val = 1;
+        if (val > 20) val = 20;
+        input.value = val;
+        display.textContent = val;
+    }
+
+    // Submit
+    function submitReservation(e) {
+        e.preventDefault();
+
+        var btn = document.getElementById('resSubmitBtn');
+        var msgEl = document.getElementById('resMessage');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Gönderiliyor...';
+
+        var data = {
+            name: document.getElementById('resName').value.trim(),
+            phone: document.getElementById('resPhone').value.trim(),
+            email: document.getElementById('resEmail').value.trim(),
+            reservationDate: document.getElementById('resDate').value,
+            reservationTime: document.getElementById('resTime').value + ':00',
+            guestCount: parseInt(document.getElementById('resGuest').value),
+            description: document.getElementById('resDesc').value.trim()
+        };
+
+        fetch('/PublicReservation/Create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+        .then(function (res) { return res.json(); })
+        .then(function (result) {
+            msgEl.style.display = 'block';
+            if (result.success) {
+                msgEl.style.background = 'rgba(34,197,94,0.1)';
+                msgEl.style.color = '#16a34a';
+                msgEl.style.border = '1px solid rgba(34,197,94,0.2)';
+                msgEl.innerHTML = '<i class="fa fa-check-circle"></i> ' + result.message;
+                document.getElementById('resForm').reset();
+                document.getElementById('resGuestDisplay').textContent = '2';
+                document.getElementById('resGuest').value = '2';
+                // Auto close after 3 seconds
+                setTimeout(function () {
+                    closeResModal();
+                    msgEl.style.display = 'none';
+                }, 3000);
+            } else {
+                msgEl.style.background = 'rgba(239,68,68,0.1)';
+                msgEl.style.color = '#dc2626';
+                msgEl.style.border = '1px solid rgba(239,68,68,0.2)';
+                msgEl.innerHTML = '<i class="fa fa-exclamation-circle"></i> ' + result.message;
+            }
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa fa-check-circle"></i> Rezervasyonu Onayla';
+        })
+        .catch(function () {
+            msgEl.style.display = 'block';
+            msgEl.style.background = 'rgba(239,68,68,0.1)';
+            msgEl.style.color = '#dc2626';
+            msgEl.style.border = '1px solid rgba(239,68,68,0.2)';
+            msgEl.innerHTML = '<i class="fa fa-exclamation-circle"></i> Bir hata oluştu, lütfen tekrar deneyin.';
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa fa-check-circle"></i> Rezervasyonu Onayla';
+        });
+    }
+</script>

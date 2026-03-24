@@ -1,0 +1,391 @@
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş Yap — Lezzet Bahçesi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+
+        body {
+            font-family:'DM Sans',sans-serif;
+            min-height:100vh;
+            display:flex;
+            background:#f8f6f2;
+            color:#1a1a1a;
+        }
+
+        /* LEFT PANEL */
+        .left-panel {
+            flex:1;
+            background:linear-gradient(135deg, rgba(26,26,26,0.82), rgba(26,26,26,0.65)),
+                        url('/dina-html/images/parallax-6.jpg') center/cover no-repeat;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+            padding:60px 40px;
+            text-align:center;
+            position:relative;
+            overflow:hidden;
+        }
+
+        .left-panel::before {
+            content:'';
+            position:absolute;
+            inset:0;
+            background:radial-gradient(circle at 30% 70%, rgba(230,160,60,0.15) 0%, transparent 60%);
+        }
+
+        .brand-logo {
+            width:80px; height:80px;
+            background:linear-gradient(135deg,#e6a03c,#c8861e);
+            border-radius:20px;
+            display:flex; align-items:center; justify-content:center;
+            font-size:36px; color:#fff;
+            margin-bottom:28px;
+            box-shadow:0 12px 40px rgba(230,160,60,0.35);
+            position:relative;
+            z-index:1;
+        }
+
+        .brand-title {
+            font-family:'Playfair Display',serif;
+            font-size:32px;
+            font-weight:700;
+            color:#fff;
+            margin-bottom:10px;
+            position:relative;
+            z-index:1;
+        }
+
+        .brand-sub {
+            font-size:15px;
+            color:rgba(255,255,255,0.65);
+            line-height:1.7;
+            max-width:320px;
+            position:relative;
+            z-index:1;
+        }
+
+        .brand-features {
+            margin-top:40px;
+            display:flex;
+            flex-direction:column;
+            gap:14px;
+            position:relative;
+            z-index:1;
+        }
+
+        .bf-item {
+            display:flex; align-items:center; gap:12px;
+            color:rgba(255,255,255,0.75);
+            font-size:13.5px;
+        }
+
+        .bf-icon {
+            width:34px; height:34px;
+            background:rgba(230,160,60,0.2);
+            border-radius:9px;
+            display:flex; align-items:center; justify-content:center;
+            font-size:14px; color:#e6a03c;
+            flex-shrink:0;
+        }
+
+        /* RIGHT PANEL */
+        .right-panel {
+            width:520px;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            padding:60px;
+            background:#fff;
+        }
+
+        .login-header {
+            margin-bottom:36px;
+        }
+
+        .login-welcome {
+            font-size:13px;
+            color:#e6a03c;
+            font-weight:700;
+            letter-spacing:0.08em;
+            text-transform:uppercase;
+            margin-bottom:8px;
+        }
+
+        .login-title {
+            font-family:'Playfair Display',serif;
+            font-size:28px;
+            font-weight:700;
+            color:#1a1a1a;
+            margin-bottom:6px;
+        }
+
+        .login-desc {
+            font-size:14px;
+            color:#999;
+        }
+
+        /* FORM */
+        .form-group {
+            margin-bottom:22px;
+        }
+
+        .form-label {
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            margin-bottom:8px;
+        }
+
+        .form-label label {
+            font-size:13px;
+            font-weight:650;
+            color:#4a4540;
+        }
+
+        .input-wrap {
+            position:relative;
+        }
+
+        .input-wrap .iw-icon {
+            position:absolute;
+            left:14px;
+            top:50%;
+            transform:translateY(-50%);
+            font-size:16px;
+            color:#c5bfb9;
+            pointer-events:none;
+            transition:color 0.2s;
+        }
+
+        .input-wrap:focus-within .iw-icon {
+            color:#e6a03c;
+        }
+
+        .form-input {
+            width:100%;
+            padding:14px 16px 14px 46px;
+            border:1.5px solid #eeebe5;
+            border-radius:12px;
+            font-size:14.5px;
+            font-family:'DM Sans',sans-serif;
+            color:#1a1a1a;
+            background:#fdfcfb;
+            outline:none;
+            transition:all 0.22s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        .form-input::placeholder { color:#c5bfb9; }
+        .form-input:hover { border-color:#d8d2c8; background:#fff; }
+        .form-input:focus { border-color:#e6a03c; background:#fff; box-shadow:0 0 0 4px rgba(230,160,60,0.12); }
+
+        .toggle-pw {
+            position:absolute;
+            right:14px;
+            top:50%;
+            transform:translateY(-50%);
+            background:none;
+            border:none;
+            font-size:17px;
+            color:#c5bfb9;
+            cursor:pointer;
+            transition:color 0.2s;
+        }
+
+        .toggle-pw:hover { color:#e6a03c; }
+
+        .btn-login {
+            width:100%;
+            padding:15px;
+            background:linear-gradient(135deg,#e6a03c,#c8861e);
+            color:#fff;
+            border:none;
+            border-radius:12px;
+            font-size:15px;
+            font-weight:700;
+            font-family:'DM Sans',sans-serif;
+            cursor:pointer;
+            transition:all 0.22s cubic-bezier(0.4,0,0.2,1);
+            box-shadow:0 4px 20px rgba(230,160,60,0.35);
+            display:flex; align-items:center; justify-content:center; gap:8px;
+            margin-top:8px;
+        }
+
+        .btn-login:hover {
+            transform:translateY(-2px);
+            box-shadow:0 8px 28px rgba(230,160,60,0.45);
+        }
+
+        .btn-login:active { transform:translateY(0); }
+
+        /* ERROR */
+        .error-box {
+            background:rgba(239,68,68,0.08);
+            border:1px solid rgba(239,68,68,0.2);
+            border-radius:11px;
+            padding:12px 16px;
+            margin-bottom:22px;
+            display:flex;
+            align-items:center;
+            gap:10px;
+            font-size:13.5px;
+            color:#dc2626;
+            font-weight:500;
+            animation:shake 0.4s ease;
+        }
+
+        .error-icon {
+            width:32px; height:32px;
+            background:rgba(239,68,68,0.12);
+            border-radius:8px;
+            display:flex; align-items:center; justify-content:center;
+            font-size:15px;
+            flex-shrink:0;
+        }
+
+        .back-link {
+            text-align:center;
+            margin-top:28px;
+        }
+
+        .back-link a {
+            font-size:13px;
+            color:#999;
+            text-decoration:none;
+            transition:color 0.2s;
+        }
+
+        .back-link a:hover { color:#e6a03c; }
+
+        /* ANIMATIONS */
+        @@keyframes shake {
+            0%,100% { transform:translateX(0); }
+            20%     { transform:translateX(-8px); }
+            40%     { transform:translateX(8px); }
+            60%     { transform:translateX(-5px); }
+            80%     { transform:translateX(5px); }
+        }
+
+        @@keyframes fadeIn {
+            from { opacity:0; transform:translateY(12px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+
+        .right-panel > * { animation:fadeIn 0.5s ease both; }
+        .right-panel > *:nth-child(2) { animation-delay:0.08s; }
+        .right-panel > *:nth-child(3) { animation-delay:0.16s; }
+
+        /* RESPONSIVE */
+        @@media (max-width:991.98px) {
+            .left-panel { display:none; }
+            .right-panel { width:100%; max-width:480px; margin:0 auto; }
+            body { justify-content:center; padding:20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+        <div class="brand-logo"><i class="bi bi-cup-hot-fill"></i></div>
+        <div class="brand-title">Lezzet Bahçesi</div>
+        <p class="brand-sub">Restoran yönetim panelinize giriş yaparak menü, rezervasyon ve kampanya yönetimini kolayca gerçekleştirin.</p>
+        <div class="brand-features">
+            <div class="bf-item">
+                <div class="bf-icon"><i class="bi bi-grid-1x2-fill"></i></div>
+                <span>Gelişmiş Dashboard & Analitik</span>
+            </div>
+            <div class="bf-item">
+                <div class="bf-icon"><i class="bi bi-calendar2-check-fill"></i></div>
+                <span>Rezervasyon Yönetimi</span>
+            </div>
+            <div class="bf-item">
+                <div class="bf-icon"><i class="bi bi-megaphone-fill"></i></div>
+                <span>Kampanya & İndirim Yönetimi</span>
+            </div>
+            <div class="bf-item">
+                <div class="bf-icon"><i class="bi bi-bar-chart-line-fill"></i></div>
+                <span>Gerçek Zamanlı İstatistikler</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+        <div class="login-header">
+            <div class="login-welcome">Hoş Geldiniz</div>
+            <h1 class="login-title">Yönetim Paneli</h1>
+            <p class="login-desc">Devam etmek için giriş bilgilerinizi girin.</p>
+        </div>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="error-box">
+                <div class="error-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+                <span>@ViewBag.Error</span>
+            </div>
+        }
+
+        <form method="post" asp-action="Index" asp-controller="Login">
+            <div class="form-group">
+                <div class="form-label">
+                    <label for="username">Kullanıcı Adı</label>
+                </div>
+                <div class="input-wrap">
+                    <i class="bi bi-person-fill iw-icon"></i>
+                    <input type="text" id="username" name="username" class="form-input"
+                           placeholder="Kullanıcı adınızı girin" autocomplete="username" required />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-label">
+                    <label for="password">Şifre</label>
+                </div>
+                <div class="input-wrap">
+                    <i class="bi bi-lock-fill iw-icon"></i>
+                    <input type="password" id="password" name="password" class="form-input"
+                           placeholder="Şifrenizi girin" autocomplete="current-password" required />
+                    <button type="button" class="toggle-pw" onclick="togglePassword()">
+                        <i class="bi bi-eye-fill" id="eyeIcon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-login">
+                <i class="bi bi-box-arrow-in-right"></i>
+                Giriş Yap
+            </button>
+        </form>
+
+        <div class="back-link">
+            <a href="/Menu/Index"><i class="bi bi-arrow-left me-1"></i> Siteye Geri Dön</a>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            var pw = document.getElementById('password');
+            var icon = document.getElementById('eyeIcon');
+            if (pw.type === 'password') {
+                pw.type = 'text';
+                icon.className = 'bi bi-eye-slash-fill';
+            } else {
+                pw.type = 'password';
+                icon.className = 'bi bi-eye-fill';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1624 @@
+﻿@model GetCategoryByIdDto
+@{
+    ViewData["Title"] = "Kategori Düzenle";
+    Layout = "~/Views/AdminLayout/Index.cshtml";
+}
+
+<style>
+    :root {
+        --accent: #e6a03c;
+        --accent-dark: #c8861e;
+        --accent-soft: rgba(230,160,60,0.10);
+        --accent-glow: rgba(230,160,60,0.22);
+        --green: #22c55e;
+        --green-soft: rgba(34,197,94,0.10);
+        --red: #ef4444;
+        --border: #eeebe5;
+        --muted: #9a9590;
+        --text: #1a1a1a;
+        --text2: #6b6460;
+        --radius: 14px;
+        --radius-sm: 9px;
+        --tr: all 0.22s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    /* PAGE HEADER */
+    .edit-header {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 28px;
+        animation: fadeDown 0.4s ease both;
+    }
+
+    .back-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 11px;
+        border: 1px solid var(--border);
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 17px;
+        color: var(--text2);
+        text-decoration: none;
+        transition: var(--tr);
+        flex-shrink: 0;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+        .back-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent-dark);
+            background: var(--accent-soft);
+            transform: translateX(-2px);
+        }
+
+    .edit-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text);
+        margin: 0 0 3px;
+        line-height: 1.2;
+    }
+
+    .edit-desc {
+        font-size: 13px;
+        color: var(--muted);
+        margin: 0;
+    }
+
+    /* ID BADGE */
+    .id-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--accent-soft);
+        border: 1px solid #fde8c0;
+        color: var(--accent-dark);
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+        margin-left: auto;
+        flex-shrink: 0;
+    }
+
+    /* BREADCRUMB */
+    .bc-bar {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: var(--muted);
+        margin-bottom: 22px;
+        animation: fadeDown 0.4s 0.05s ease both;
+    }
+
+        .bc-bar a {
+            color: var(--muted);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+
+            .bc-bar a:hover {
+                color: var(--accent-dark);
+            }
+
+    .bc-cur {
+        color: var(--text2);
+        font-weight: 600;
+    }
+
+    /* CHANGE INDICATOR BANNER */
+    .change-banner {
+        display: none;
+        align-items: center;
+        gap: 10px;
+        background: linear-gradient(135deg, #fffbf3, #fff8ec);
+        border: 1px solid #fde8c0;
+        border-radius: 11px;
+        padding: 11px 16px;
+        margin-bottom: 18px;
+        font-size: 13px;
+        color: #8a6830;
+        font-weight: 500;
+        animation: fadeDown 0.3s ease both;
+    }
+
+        .change-banner.visible {
+            display: flex;
+        }
+
+        .change-banner i {
+            color: var(--accent);
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+
+        .change-banner strong {
+            color: var(--accent-dark);
+        }
+
+    /* LAYOUT */
+    .edit-layout {
+        display: grid;
+        grid-template-columns: 1fr 340px;
+        gap: 20px;
+        align-items: start;
+        animation: fadeUp 0.4s 0.08s ease both;
+    }
+
+    /* CARDS */
+    .f-card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: 0 2px 14px rgba(0,0,0,0.05);
+        overflow: hidden;
+        margin-bottom: 18px;
+    }
+
+        .f-card:last-child {
+            margin-bottom: 0;
+        }
+
+    .f-card-head {
+        padding: 18px 22px 15px;
+        border-bottom: 1px solid #f5f2ee;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .head-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
+        background: var(--accent-soft);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        color: var(--accent-dark);
+        flex-shrink: 0;
+    }
+
+    .head-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text);
+        margin: 0 0 2px;
+    }
+
+    .head-sub {
+        font-size: 12px;
+        color: var(--muted);
+        margin: 0;
+    }
+
+    .f-card-body {
+        padding: 22px;
+    }
+
+    /* FIELDS */
+    .fg {
+        margin-bottom: 20px;
+    }
+
+        .fg:last-child {
+            margin-bottom: 0;
+        }
+
+    .fl {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 7px;
+    }
+
+        .fl label {
+            font-size: 13px;
+            font-weight: 650;
+            color: var(--text2);
+        }
+
+    .lbl-req {
+        font-size: 11px;
+        color: var(--red);
+        font-weight: 600;
+    }
+
+    .lbl-opt {
+        font-size: 11px;
+        color: var(--muted);
+        background: #f5f2ee;
+        padding: 2px 7px;
+        border-radius: 10px;
+        font-weight: 500;
+    }
+
+    .fi-wrap {
+        position: relative;
+    }
+
+        .fi-wrap .fi-ico {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 15px;
+            color: #c5bfb9;
+            pointer-events: none;
+            transition: color 0.2s;
+        }
+
+        .fi-wrap:focus-within .fi-ico {
+            color: var(--accent-dark);
+        }
+
+    .f-input {
+        width: 100%;
+        padding: 11px 14px;
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-sm);
+        font-size: 14px;
+        font-family: 'DM Sans', sans-serif;
+        color: var(--text);
+        background: #fdfcfb;
+        outline: none;
+        transition: var(--tr);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+
+    .f-input-pl {
+        padding-left: 40px;
+    }
+
+    .f-input-pr {
+        padding-right: 52px;
+    }
+
+    .f-input::placeholder {
+        color: #c5bfb9;
+    }
+
+    .f-input:hover {
+        border-color: #d8d2c8;
+        background: #fff;
+    }
+
+    .f-input:focus {
+        border-color: var(--accent);
+        background: #fff;
+        box-shadow: 0 0 0 3.5px var(--accent-glow);
+    }
+
+    .char-count {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 11px;
+        color: var(--muted);
+        font-weight: 500;
+        pointer-events: none;
+    }
+
+    .f-hint {
+        margin-top: 6px;
+        font-size: 12px;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .f-err {
+        margin-top: 6px;
+        font-size: 12px;
+        color: var(--red);
+        display: none;
+        align-items: center;
+        gap: 5px;
+    }
+
+    /* VALIDATION */
+    .fg.is-invalid .f-input {
+        border-color: var(--red);
+    }
+
+        .fg.is-invalid .f-input:focus {
+            box-shadow: 0 0 0 3px rgba(239,68,68,0.15);
+        }
+
+    .fg.is-invalid .f-err {
+        display: flex;
+    }
+
+    .fg.is-valid .f-input {
+        border-color: var(--green);
+    }
+
+        .fg.is-valid .f-input:focus {
+            box-shadow: 0 0 0 3px var(--green-soft);
+        }
+
+    /* STATUS TOGGLE */
+    .st-wrap {
+        display: flex;
+        gap: 10px;
+    }
+
+    .st-opt {
+        flex: 1;
+        position: relative;
+    }
+
+        .st-opt input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .st-opt label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--tr);
+            background: #fdfcfb;
+            user-select: none;
+        }
+
+            .st-opt label:hover {
+                border-color: #d8d2c8;
+                background: #fff;
+            }
+
+        .st-opt.opt-a input:checked + label {
+            border-color: var(--green);
+            background: #fff;
+            box-shadow: 0 0 0 3px var(--green-soft);
+        }
+
+        .st-opt.opt-p input:checked + label {
+            border-color: var(--red);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(239,68,68,0.10);
+        }
+
+    .so-ico {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        flex-shrink: 0;
+    }
+
+    .opt-a .so-ico {
+        background: var(--green-soft);
+        color: #16a34a;
+    }
+
+    .opt-p .so-ico {
+        background: rgba(239,68,68,0.10);
+        color: var(--red);
+    }
+
+    .so-lbl {
+        font-size: 13.5px;
+        font-weight: 700;
+        color: var(--text);
+        display: block;
+    }
+
+    .so-sub {
+        font-size: 11px;
+        color: var(--muted);
+        display: block;
+    }
+
+    .so-chk {
+        margin-left: auto;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        border: 2px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 9px;
+        color: transparent;
+        transition: var(--tr);
+        flex-shrink: 0;
+    }
+
+    .opt-a input:checked + label .so-chk {
+        border-color: var(--green);
+        background: var(--green);
+        color: #fff;
+    }
+
+    .opt-p input:checked + label .so-chk {
+        border-color: var(--red);
+        background: var(--red);
+        color: #fff;
+    }
+
+    /* CURRENT IMAGE PREVIEW */
+    .curr-img-box {
+        border: 1.5px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        background: #fdfcfb;
+        margin-bottom: 14px;
+        position: relative;
+    }
+
+        .curr-img-box img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .curr-img-box:hover img {
+            transform: scale(1.03);
+        }
+
+    .curr-img-label {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.55), transparent);
+        padding: 28px 14px 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .curr-img-tag {
+        font-size: 11px;
+        font-weight: 600;
+        color: rgba(255,255,255,0.85);
+        background: rgba(0,0,0,0.35);
+        padding: 3px 9px;
+        border-radius: 20px;
+        backdrop-filter: blur(6px);
+    }
+
+    .curr-img-change {
+        font-size: 11.5px;
+        font-weight: 600;
+        color: #fff;
+        background: var(--accent);
+        padding: 4px 11px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: var(--tr);
+        border: none;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+        .curr-img-change:hover {
+            background: var(--accent-dark);
+        }
+
+    /* IMAGE UPLOAD */
+    .up-tabs {
+        display: flex;
+        margin: 0 20px;
+        border-bottom: 1px solid #f0ede8;
+    }
+
+    .utab {
+        padding: 10px 14px;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--muted);
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition: var(--tr);
+        user-select: none;
+        margin-bottom: -1px;
+    }
+
+        .utab.active {
+            color: var(--accent-dark);
+            border-bottom-color: var(--accent);
+        }
+
+    .utab-p {
+        display: none;
+        padding: 18px 20px;
+    }
+
+        .utab-p.active {
+            display: block;
+        }
+
+    .drop-zone {
+        border: 2px dashed #ddd8ce;
+        border-radius: 12px;
+        padding: 26px 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: var(--tr);
+        background: #fdfcfb;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .drop-zone:hover, .drop-zone.over {
+            border-color: var(--accent);
+            background: var(--accent-soft);
+        }
+
+        .drop-zone input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+    .dz-ico {
+        width: 46px;
+        height: 46px;
+        background: linear-gradient(135deg,#f5f2ee,#ede8df);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        color: #c5bfb9;
+        margin: 0 auto 10px;
+        transition: var(--tr);
+    }
+
+    .drop-zone:hover .dz-ico {
+        background: var(--accent-soft);
+        color: var(--accent-dark);
+        transform: scale(1.08);
+    }
+
+    .dz-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text2);
+        margin-bottom: 4px;
+    }
+
+    .dz-sub {
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.6;
+    }
+
+        .dz-sub span {
+            color: var(--accent-dark);
+            font-weight: 600;
+        }
+
+    .dz-prev {
+        display: none;
+        position: relative;
+    }
+
+        .dz-prev img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 10px;
+            display: block;
+        }
+
+    .dz-rm {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 30px;
+        height: 30px;
+        background: rgba(0,0,0,0.5);
+        border: none;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 14px;
+        cursor: pointer;
+        backdrop-filter: blur(6px);
+        transition: var(--tr);
+        z-index: 2;
+    }
+
+        .dz-rm:hover {
+            background: var(--red);
+        }
+
+    .up-note {
+        margin-top: 12px;
+        font-size: 11.5px;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    /* DANGER ZONE */
+    .danger-card {
+        background: #fff;
+        border: 1px solid #fecaca;
+        border-radius: var(--radius);
+        box-shadow: 0 2px 14px rgba(239,68,68,0.06);
+        overflow: hidden;
+    }
+
+    .danger-head {
+        padding: 16px 22px 14px;
+        border-bottom: 1px solid #fee2e2;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #fff5f5;
+    }
+
+    .danger-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
+        background: rgba(239,68,68,0.10);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        color: var(--red);
+        flex-shrink: 0;
+    }
+
+    .danger-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #b91c1c;
+        margin: 0 0 2px;
+    }
+
+    .danger-sub {
+        font-size: 12px;
+        color: #f87171;
+        margin: 0;
+    }
+
+    .danger-body {
+        padding: 18px 22px;
+    }
+
+    .danger-desc {
+        font-size: 13px;
+        color: #6b7280;
+        margin-bottom: 14px;
+        line-height: 1.6;
+    }
+
+    .btn-danger {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #fff;
+        color: var(--red);
+        border: 1.5px solid #fecaca;
+        padding: 10px 18px;
+        border-radius: 10px;
+        font-size: 13.5px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--tr);
+        font-family: 'DM Sans', sans-serif;
+    }
+
+        .btn-danger:hover {
+            background: var(--red);
+            color: #fff;
+            border-color: var(--red);
+            box-shadow: 0 4px 14px rgba(239,68,68,0.28);
+        }
+
+    /* PREVIEW CARD */
+    .prev-card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: 0 2px 14px rgba(0,0,0,0.05);
+        overflow: hidden;
+    }
+
+    .prev-head {
+        padding: 15px 18px 13px;
+        border-bottom: 1px solid #f5f2ee;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .prev-head-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text2);
+    }
+
+    .live-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--green);
+        margin-left: auto;
+        animation: pulse 2s infinite;
+    }
+
+    .pci {
+        margin: 14px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .pci-img {
+        width: 100%;
+        height: 140px;
+        background: linear-gradient(135deg,#f9f7f4,#ede8df);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        color: #d0c9be;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .pci-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+    .pci-badge {
+        position: absolute;
+        top: 9px;
+        right: 9px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 3px 9px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 700;
+        backdrop-filter: blur(8px);
+    }
+
+        .pci-badge.active {
+            background: rgba(34,197,94,0.18);
+            color: #15803d;
+            border: 1px solid rgba(34,197,94,0.28);
+        }
+
+        .pci-badge.passive {
+            background: rgba(239,68,68,0.16);
+            color: #b91c1c;
+            border: 1px solid rgba(239,68,68,0.25);
+        }
+
+    .pci-bdot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+    }
+
+    .pci-badge.active .pci-bdot {
+        background: var(--green);
+    }
+
+    .pci-badge.passive .pci-bdot {
+        background: var(--red);
+    }
+
+    .pci-foot {
+        padding: 11px 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #fff;
+    }
+
+    .pci-name {
+        font-size: 13.5px;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: -0.02em;
+    }
+
+        .pci-name.ph {
+            color: #d0c9be;
+            font-weight: 500;
+            font-style: italic;
+        }
+
+    .pci-acts {
+        display: flex;
+        gap: 5px;
+    }
+
+    .pci-btn {
+        width: 28px;
+        height: 28px;
+        border-radius: 7px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+    }
+
+        .pci-btn.e {
+            background: #fff7ed;
+            color: var(--accent-dark);
+            border: 1px solid #fde8c0;
+        }
+
+        .pci-btn.d {
+            background: #fff5f5;
+            color: var(--red);
+            border: 1px solid #fecaca;
+        }
+
+    .prev-note {
+        font-size: 11.5px;
+        color: var(--muted);
+        text-align: center;
+        padding: 0 14px 14px;
+    }
+
+    /* CHANGES SUMMARY */
+    .changes-box {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: 0 2px 14px rgba(0,0,0,0.05);
+        overflow: hidden;
+        display: none;
+    }
+
+        .changes-box.visible {
+            display: block;
+        }
+
+    .changes-head {
+        padding: 13px 18px;
+        border-bottom: 1px solid #f5f2ee;
+        font-size: 12.5px;
+        font-weight: 700;
+        color: var(--text2);
+        display: flex;
+        align-items: center;
+        gap: 7px;
+    }
+
+        .changes-head .ch-count {
+            background: var(--accent);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 20px;
+            margin-left: auto;
+        }
+
+    .changes-list {
+        padding: 12px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .ch-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        font-size: 12px;
+        color: var(--text2);
+        line-height: 1.5;
+    }
+
+        .ch-item .ch-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--accent);
+            flex-shrink: 0;
+            margin-top: 4px;
+        }
+
+        .ch-item strong {
+            color: var(--text);
+        }
+
+    /* SUBMIT CARD */
+    .sub-card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: 0 2px 14px rgba(0,0,0,0.05);
+        padding: 18px;
+        margin-bottom: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .btn-sub {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        background: linear-gradient(135deg,var(--accent),var(--accent-dark));
+        color: #fff;
+        border: none;
+        padding: 13px 22px;
+        border-radius: 11px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: var(--tr);
+        box-shadow: 0 4px 16px rgba(230,160,60,0.30);
+        font-family: 'DM Sans', sans-serif;
+    }
+
+        .btn-sub:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(230,160,60,0.42);
+        }
+
+        .btn-sub:active {
+            transform: translateY(0);
+        }
+
+        .btn-sub.loading {
+            pointer-events: none;
+            opacity: 0.85;
+        }
+
+    .btn-back {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: transparent;
+        color: var(--text2);
+        border: 1.5px solid var(--border);
+        padding: 11px 22px;
+        border-radius: 11px;
+        font-size: 13.5px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--tr);
+        font-family: 'DM Sans', sans-serif;
+        text-decoration: none;
+    }
+
+        .btn-back:hover {
+            border-color: #d8d2c8;
+            background: #fdfcfb;
+            color: var(--text);
+        }
+
+    /* ANIMATIONS */
+    @@keyframes fadeDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes fadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(14px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes pulse {
+        0%, 100% {
+            box-shadow: 0 0 0 2px rgba(34,197,94,.25);
+        }
+
+        50% {
+            box-shadow: 0 0 0 5px rgba(34,197,94,.08);
+        }
+    }
+
+    @@keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .spin {
+        animation: spin 0.8s linear infinite;
+    }
+
+    /* RESPONSIVE */
+    @@media (max-width: 991.98px) {
+        .edit-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .right-col {
+            order: -1;
+        }
+
+        .prev-card {
+            display: none;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .st-wrap {
+            flex-direction: column;
+        }
+    }
+</style>
+
+<!-- BREADCRUMB -->
+<div class="bc-bar">
+    <a href="/Admin/Dashboard"><i class="bi bi-house-fill" style="font-size:11px;"></i></a>
+    <span style="opacity:.4;"><i class="bi bi-chevron-right" style="font-size:10px;"></i></span>
+    <a href="/Admin/Category">Kategori Yönetimi</a>
+    <span style="opacity:.4;"><i class="bi bi-chevron-right" style="font-size:10px;"></i></span>
+    <span class="bc-cur">Düzenle — @Model.CategoryName</span>
+</div>
+
+<!-- PAGE HEADER -->
+<div class="edit-header">
+    <a href="/Category/CategoryList" class="back-btn" title="Geri">
+        <i class="bi bi-arrow-left"></i>
+    </a>
+    <div style="flex:1;">
+        <h1 class="edit-title">
+            <i class="bi bi-pencil-square me-2" style="color:var(--accent);font-size:18px;vertical-align:middle;"></i>
+            Kategori Düzenle
+        </h1>
+        <p class="edit-desc">Mevcut kategori bilgilerini güncelleyin.</p>
+    </div>
+    <div class="id-badge">
+        <i class="bi bi-hash"></i> @Model.CategoryId
+    </div>
+</div>
+
+<!-- CHANGE BANNER -->
+<div class="change-banner" id="changeBanner">
+    <i class="bi bi-pencil-fill"></i>
+    <span>Kaydedilmemiş değişiklikleriniz var. Kaydetmek için <strong>Değişiklikleri Kaydet</strong> butonuna tıklayın.</span>
+</div>
+
+<!-- FORM -->
+<form id="editForm"
+      asp-action="UpdateCategory"
+      asp-controller="Category"
+      method="post"
+      enctype="multipart/form-data"
+      novalidate>
+
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="CategoryId" />
+
+    <div class="edit-layout">
+
+        <!-- LEFT COLUMN -->
+        <div>
+
+            <!-- General Info -->
+            <div class="f-card">
+                <div class="f-card-head">
+                    <div class="head-icon"><i class="bi bi-info-circle-fill"></i></div>
+                    <div>
+                        <div class="head-title">Genel Bilgiler</div>
+                        <div class="head-sub">Kategori adı ve yayın durumu</div>
+                    </div>
+                </div>
+                <div class="f-card-body">
+
+                    <!-- Name -->
+                    <div class="fg" id="fg-name">
+                        <div class="fl">
+                            <label for="CategoryName">Kategori Adı</label>
+                            <span class="lbl-req">* Zorunlu</span>
+                        </div>
+                        <div class="fi-wrap">
+                            <i class="bi bi-tag-fill fi-ico"></i>
+                            <input type="text"
+                                   id="CategoryName"
+                                   name="CategoryName"
+                                   asp-for="CategoryName"
+                                   class="f-input f-input-pl f-input-pr"
+                                   placeholder="Kategori adını girin..."
+                                   maxlength="50"
+                                   autocomplete="off"
+                                   oninput="onName(this)" />
+                            <span class="char-count" id="nameCount">0/50</span>
+                        </div>
+                        <div class="f-err" id="nameErr">
+                            <i class="bi bi-exclamation-circle-fill"></i> Kategori adı boş bırakılamaz.
+                        </div>
+                        <div class="f-hint">
+                            <i class="bi bi-lightbulb" style="color:var(--accent);"></i>
+                            Kısa ve açıklayıcı bir isim seçin.
+                        </div>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="fg">
+                        <div class="fl"><label>Yayın Durumu</label></div>
+                        <div class="st-wrap">
+                            <div class="st-opt opt-a">
+                                <input type="radio" name="CategoryStatus" id="stA" value="true"
+                                       @(Model.CategoryStatus ? "checked" : "")
+                                       onchange="updateStatus(true)" />
+                                <label for="stA">
+                                    <div class="so-ico"><i class="bi bi-check-circle-fill"></i></div>
+                                    <div>
+                                        <span class="so-lbl">Aktif</span>
+                                        <span class="so-sub">Menüde görünür</span>
+                                    </div>
+                                    <div class="so-chk"><i class="bi bi-check"></i></div>
+                                </label>
+                            </div>
+                            <div class="st-opt opt-p">
+                                <input type="radio" name="CategoryStatus" id="stP" value="false"
+                                       @(!Model.CategoryStatus ? "checked" : "")
+                                       onchange="updateStatus(false)" />
+                                <label for="stP">
+                                    <div class="so-ico"><i class="bi bi-pause-circle-fill"></i></div>
+                                    <div>
+                                        <span class="so-lbl">Pasif</span>
+                                        <span class="so-sub">Menüde gizli</span>
+                                    </div>
+                                    <div class="so-chk"><i class="bi bi-check"></i></div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- Image Card -->
+            <div class="f-card">
+                <div class="f-card-head">
+                    <div class="head-icon"><i class="bi bi-image-fill"></i></div>
+                    <div>
+                        <div class="head-title">Kategori Görseli</div>
+                        <div class="head-sub">Mevcut görseli değiştir veya yeni ekle</div>
+                    </div>
+                </div>
+
+                <!-- Current Image -->
+                @if (!string.IsNullOrWhiteSpace(Model.CategoryImageUrl))
+                {
+                    <div style="padding: 18px 20px 0;">
+                        <div style="font-size:12px;font-weight:700;color:var(--muted); text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">
+                            Mevcut Görsel
+                        </div>
+                        <div class="curr-img-box">
+                            <img id="currentImg" src="@Model.CategoryImageUrl" alt="@Model.CategoryName" />
+                            <div class="curr-img-label">
+                                <span class="curr-img-tag"><i class="bi bi-image me-1"></i>Mevcut</span>
+                                <button type="button" class="curr-img-change" onclick="showNewImageSection()">
+                                    <i class="bi bi-arrow-repeat"></i> Değiştir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div id="newImgSection">
+
+
+                    <!-- Tabs -->
+                    <div class="up-tabs">
+                        <div class="utab active" id="tab-btn-upload" onclick="switchTab('upload')">
+                            <i class="bi bi-upload me-1"></i> Dosya Yükle
+                        </div>
+                        <div class="utab" id="tab-btn-url" onclick="switchTab('url')">
+                            <i class="bi bi-link-45deg me-1"></i> URL ile Ekle
+                        </div>
+                    </div>
+
+                    <!-- Upload Panel -->
+                    <div class="utab-p active" id="tab-upload">
+                        <div class="drop-zone" id="dropZone">
+                            <input type="file" id="imgFile" name="CategoryImage" accept="image/*" onchange="onFileChange(event)" />
+                            <div id="dzDefault">
+                                <div class="dz-ico"><i class="bi bi-cloud-arrow-up-fill"></i></div>
+                                <div class="dz-title">Yeni görsel yükleyin</div>
+                                <p class="dz-sub">veya <span onclick="document.getElementById('imgFile').click()">tıklayın</span><br>PNG, JPG, WEBP — maks. 5MB</p>
+                            </div>
+                            <div class="dz-prev" id="dzPrev">
+                                <img id="dzImg" src="" alt="" />
+                                <button type="button" class="dz-rm" onclick="removeNewImg(event)">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="up-note">
+                            <i class="bi bi-shield-check" style="color:var(--green);"></i>
+                            Güvenli yükleme &middot; JPG, PNG, WEBP, GIF desteklenir
+                        </div>
+                    </div>
+
+                    <!-- URL Panel -->
+                    <div class="utab-p" id="tab-url">
+                        <div class="fg" style="margin-bottom:0;">
+                            <div class="fl">
+                                <label for="CategoryImageUrl">Görsel URL</label>
+                                <span class="lbl-opt">Opsiyonel</span>
+                            </div>
+                            <div class="fi-wrap">
+                                <i class="bi bi-link-45deg fi-ico"></i>
+                                <input type="url"
+                                       id="CategoryImageUrl"
+                                       name="CategoryImageUrl"
+                                       asp-for="CategoryImageUrl"
+                                       class="f-input f-input-pl"
+                                       placeholder="https://ornek.com/gorsel.jpg"
+                                       oninput="onUrl(this)" />
+                            </div>
+                            <div class="f-hint">
+                                <i class="bi bi-info-circle"></i>
+                                Harici bir görsel bağlantısı girebilirsiniz.
+                            </div>
+                        </div>
+                    </div>
+
+                </div><!-- close newImgSection -->
+            </div>
+
+            <!-- Danger Zone -->
+            <div class="danger-card">
+                <div class="danger-head">
+                    <div class="danger-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+                    <div>
+                        <div class="danger-title">Tehlikeli Bölge</div>
+                        <div class="danger-sub">Bu işlemler geri alınamaz</div>
+                    </div>
+                </div>
+                <div class="danger-body">
+                    <p class="danger-desc">
+                        Bu kategoriyi silmek, kategoriye bağlı tüm ürünleri de etkileyebilir.
+                        Silmeden önce ürünleri başka bir kategoriye taşımanız önerilir.
+                    </p>
+                    <button type="button" class="btn-danger" onclick="confirmDelete(@Model.CategoryId, '@Model.CategoryName')">
+                        <i class="bi bi-trash3-fill"></i>
+                        Bu Kategoriyi Sil
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="right-col" style="display:flex;flex-direction:column;gap:16px;">
+
+            <!-- Live Preview -->
+            <div class="prev-card">
+                <div class="prev-head">
+                    <div class="head-icon" style="width:28px;height:28px;font-size:13px;">
+                        <i class="bi bi-eye-fill"></i>
+                    </div>
+                    <span class="prev-head-title">Canlı Önizleme</span>
+                    <div class="live-dot"></div>
+                </div>
+                <div class="pci">
+                    <div class="pci-img" id="pciImg">
+                        @if (!string.IsNullOrWhiteSpace(Model.CategoryImageUrl))
+                        {
+                            <i class="bi bi-image" id="pciPh" style="display:none;"></i>
+                            <img id="pciPreview" src="@Model.CategoryImageUrl" alt="" style="display:block;" />
+                        }
+                        else
+                        {
+                            <i class="bi bi-image" id="pciPh"></i>
+                            <img id="pciPreview" src="" alt="" />
+                        }
+                        <span class="pci-badge @(Model.CategoryStatus ? "active" : "passive")" id="pciBadge">
+                            <span class="pci-bdot"></span>
+                            <span id="pciSText">@(Model.CategoryStatus ? "Aktif" : "Pasif")</span>
+                        </span>
+                    </div>
+                    <div class="pci-foot">
+                        <span class="pci-name @(string.IsNullOrWhiteSpace(Model.CategoryName) ? "ph" : "")" id="pciName">
+                            @(string.IsNullOrWhiteSpace(Model.CategoryName) ? "Kategori adı..." : Model.CategoryName)
+                        </span>
+                        <div class="pci-acts">
+                            <div class="pci-btn e"><i class="bi bi-pencil-fill"></i></div>
+                            <div class="pci-btn d"><i class="bi bi-trash3-fill"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <p class="prev-note">Kategori listesinde bu şekilde görünecek</p>
+            </div>
+
+            <!-- Submit -->
+            <div class="sub-card">
+                <button type="submit" class="btn-sub" id="submitBtn">
+                    <i class="bi bi-check-circle-fill"></i>
+                    Değişiklikleri Kaydet
+                </button>
+                <a href="/Category/CategoryList" class="btn-back">
+                    <i class="bi bi-x-lg"></i>
+                    Vazgeç
+                </a>
+            </div>
+
+            <!-- Changes Summary -->
+            <div class="changes-box" id="changesBox">
+                <div class="changes-head">
+                    <i class="bi bi-clock-history" style="color:var(--accent);"></i>
+                    Değişiklikler
+                    <span class="ch-count" id="chCount">0</span>
+                </div>
+                <div class="changes-list" id="changesList"></div>
+            </div>
+
+        </div>
+
+    </div>
+</form>
+
+<!-- DELETE MODAL -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:400px;">
+        <div class="modal-content" style="border-radius:18px;border:1px solid #f0ede8;overflow:hidden;
+                                          box-shadow:0 24px 64px rgba(0,0,0,0.13);">
+            <div style="padding:36px 30px 22px;text-align:center;">
+                <div style="width:64px;height:64px;background:#fff5f5;border-radius:50%;
+                            display:flex;align-items:center;justify-content:center;
+                            margin:0 auto 18px;font-size:26px;color:#ef4444;
+                            border:1.5px solid #fecaca;">
+                    <i class="bi bi-trash3-fill"></i>
+                </div>
+                <div style="font-family:'Playfair Display',serif;font-size:19px;
+                            font-weight:700;color:#1a1a1a;margin-bottom:8px;">
+                    Kategori Silinsin mi?
+                </div>
+                <p style="font-size:13.5px;color:#888;margin-bottom:4px;">
+                    <strong id="delName" style="color:#333;"></strong> adlı kategori kalıcı olarak silinecek.
+                </p>
+                <p style="font-size:12px;color:#ccc;margin-bottom:0;">Bu işlem geri alınamaz.</p>
+            </div>
+            <div style="padding:0 30px 28px;display:flex;gap:10px;">
+                <button type="button" data-bs-dismiss="modal"
+                        style="flex:1;border-radius:11px;border:1px solid #ebebeb;background:#fff;
+                               font-size:13.5px;font-weight:600;color:#555;padding:11px;cursor:pointer;">
+                    Vazgeç
+                </button>
+                <a id="delLink" href="#"
+                   style="flex:1;border-radius:11px;background:#ef4444;color:#fff;
+                          font-size:13.5px;font-weight:600;padding:11px;text-align:center;
+                          text-decoration:none;border:none;box-shadow:0 4px 14px rgba(239,68,68,0.28);
+                          display:flex;align-items:center;justify-content:center;gap:7px;">
+                    <i class="bi bi-trash3-fill"></i> Evet, Sil
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        /* ─── INITIAL STATE ───────────────────────────────── */
+        var origName   = document.getElementById('CategoryName').value;
+        var origStatus = @(Model.CategoryStatus ? "true" : "false");
+        var origUrl    = (document.getElementById('CategoryImageUrl') || {}).value || '';
+        var currStatus = origStatus;
+        var changes    = {};
+
+        /* Init char count */
+        (function() {
+            var el = document.getElementById('CategoryName');
+            document.getElementById('nameCount').textContent = el.value.length + '/50';
+        })();
+
+        /* ─── NAME ────────────────────────────────────────── */
+        function onName(el) {
+            document.getElementById('nameCount').textContent = el.value.length + '/50';
+
+            var nameEl = document.getElementById('pciName');
+            if (el.value.trim()) {
+                nameEl.textContent = el.value;
+                nameEl.classList.remove('ph');
+                document.getElementById('fg-name').classList.remove('is-invalid');
+                document.getElementById('fg-name').classList.add('is-valid');
+            } else {
+                nameEl.textContent = 'Kategori adı...';
+                nameEl.classList.add('ph');
+                document.getElementById('fg-name').classList.remove('is-valid');
+            }
+
+            if (el.value !== origName) {
+                changes['name'] = 'İsim: <strong>' + escHtml(origName) + '</strong> → <strong>' + escHtml(el.value) + '</strong>';
+            } else {
+                delete changes['name'];
+            }
+            refreshChanges();
+        }
+
+        /* ─── STATUS ──────────────────────────────────────── */
+        function updateStatus(active) {
+            currStatus = active;
+            var b = document.getElementById('pciBadge');
+            b.className = 'pci-badge ' + (active ? 'active' : 'passive');
+            document.getElementById('pciSText').textContent = active ? 'Aktif' : 'Pasif';
+
+            if (active !== origStatus) {
+                changes['status'] = 'Durum: <strong>' + (origStatus ? 'Aktif' : 'Pasif') + '</strong> → <strong>' + (active ? 'Aktif' : 'Pasif') + '</strong>';
+            } else {
+                delete changes['status'];
+            }
+            refreshChanges();
+        }
+
+        /* ─── URL ─────────────────────────────────────────── */
+        var urlTimer;
+        function onUrl(el) {
+            clearTimeout(urlTimer);
+            urlTimer = setTimeout(function() {
+                var url = el.value.trim();
+                if (url) {
+                    var img = new Image();
+                    img.onload = function() { setPreview(url); };
+                    img.src = url;
+                }
+                if (url !== origUrl) {
+                    changes['url'] = 'Görsel URL güncellendi';
+                } else {
+                    delete changes['url'];
+                }
+                refreshChanges();
+            }, 600);
+        }
+
+        /* ─── FILE UPLOAD ─────────────────────────────────── */
+        var dz = document.getElementById('dropZone');
+        dz.addEventListener('dragover', function(e) { e.preventDefault(); dz.classList.add('over'); });
+        dz.addEventListener('dragleave', function() { dz.classList.remove('over'); });
+        dz.addEventListener('drop', function(e) {
+            e.preventDefault(); dz.classList.remove('over');
+            var f = e.dataTransfer.files[0];
+            if (f && f.type.startsWith('image/')) readFile(f);
+        });
+
+        function onFileChange(e) { if (e.target.files[0]) readFile(e.target.files[0]); }
+
+        function readFile(file) {
+            var r = new FileReader();
+            r.onload = function(e) {
+                setPreview(e.target.result);
+                changes['img'] = 'Yeni görsel yüklendi: <strong>' + escHtml(file.name) + '</strong>';
+                refreshChanges();
+            };
+            r.readAsDataURL(file);
+        }
+
+        function setPreview(src) {
+            document.getElementById('dzImg').src = src;
+            document.getElementById('dzDefault').style.display = 'none';
+            document.getElementById('dzPrev').style.display = 'block';
+            var p = document.getElementById('pciPreview');
+            p.src = src; p.style.display = 'block';
+            document.getElementById('pciPh').style.display = 'none';
+            var ci = document.getElementById('currentImg');
+            if (ci) ci.src = src;
+        }
+
+        function removeNewImg(e) {
+            e.stopPropagation();
+            document.getElementById('dzImg').src = '';
+            document.getElementById('dzDefault').style.display = '';
+            document.getElementById('dzPrev').style.display = 'none';
+            document.getElementById('imgFile').value = '';
+            delete changes['img'];
+            refreshChanges();
+        }
+
+        /* Show new image section */
+        function showNewImageSection() {
+            var sec = document.getElementById('newImgSection');
+            if (sec) { sec.style.display = 'block'; }
+            var btn = event.target.closest('button');
+            if (btn) btn.style.display = 'none';
+        }
+
+        /* ─── TAB SWITCH ──────────────────────────────────── */
+        function switchTab(tab) {
+            document.getElementById('tab-btn-upload').classList.toggle('active', tab === 'upload');
+            document.getElementById('tab-btn-url').classList.toggle('active', tab === 'url');
+            document.getElementById('tab-upload').classList.toggle('active', tab === 'upload');
+            document.getElementById('tab-url').classList.toggle('active', tab === 'url');
+        }
+
+        /* ─── CHANGE TRACKER ──────────────────────────────── */
+        function refreshChanges() {
+            var keys = Object.keys(changes);
+            var banner = document.getElementById('changeBanner');
+            var box    = document.getElementById('changesBox');
+            var list   = document.getElementById('changesList');
+            var count  = document.getElementById('chCount');
+
+            if (keys.length > 0) {
+                banner.classList.add('visible');
+                box.classList.add('visible');
+                count.textContent = keys.length;
+                list.innerHTML = keys.map(function(k) {
+                    return '<div class="ch-item"><span class="ch-dot"></span><span>' + changes[k] + '</span></div>';
+                }).join('');
+            } else {
+                banner.classList.remove('visible');
+                box.classList.remove('visible');
+            }
+        }
+
+        /* ─── HELPERS ─────────────────────────────────────── */
+        function escHtml(s) {
+            return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        }
+
+        /* ─── DELETE MODAL ────────────────────────────────── */
+        function confirmDelete(id, name) {
+            document.getElementById('delName').textContent = name;
+            document.getElementById('delLink').href = '/Category/DeleteCategory/' + id;
+            new bootstrap.Modal(document.getElementById('deleteModal')).show();
+        }
+
+        /* ─── SUBMIT ──────────────────────────────────────── */
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            var name = document.getElementById('CategoryName').value.trim();
+            if (!name) {
+                e.preventDefault();
+                document.getElementById('fg-name').classList.add('is-invalid');
+                document.getElementById('CategoryName').focus();
+                return;
+            }
+            var btn = document.getElementById('submitBtn');
+            btn.classList.add('loading');
+            btn.innerHTML = '<i class="bi bi-arrow-repeat spin"></i> Kaydediliyor...';
+        });
+    </script>
+}
+
+

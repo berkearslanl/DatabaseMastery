@@ -1,0 +1,117 @@
+@model List<ResultReservationDto>
+<div class="col-xl-8">
+    <div class="dash-card h-100">
+        <div class="dash-card-header">
+            <div>
+                <div class="section-title">Bugünkü Rezervasyonlar</div>
+                <div class="section-sub">@Model?.Count rezervasyon</div>
+            </div>
+            <a href="/Reservation/ReservationList" class="view-all">
+                Tümünü Gör <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+        <div style="overflow-x:auto;">
+            <table class="res-table">
+                <thead>
+                    <tr>
+                        <th>Müşteri</th>
+                        <th>Telefon</th>
+                        <th>Tarih</th>
+                        <th>Saat</th>
+                        <th>Kişi</th>
+                        <th>Durum</th>
+                        <th>Not</th>
+                        <th class="text-center">İşlem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model == null || !Model.Any())
+                    {
+                        <tr>
+                            <td colspan="8" style="text-align:center;padding:48px 24px;">
+                                <div style="display:flex;flex-direction:column;align-items:center;gap:10px;">
+                                    <div style="width:56px;height:56px;background:#f5f2ee;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;color:#ccc;border:2px dashed #e0d9ce;">
+                                        <i class="bi bi-calendar2-x"></i>
+                                    </div>
+                                    <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:#333;">Bugün rezervasyon yok</div>
+                                    <div style="font-size:12.5px;color:#bbb;">Yeni rezervasyon eklemek için butona tıklayın.</div>
+                                    <a href="/Reservation/CreateReservation" class="btn-add" style="margin-top:4px;">
+                                        <i class="bi bi-plus-lg"></i> Yeni Rezervasyon
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var r in Model)
+                        {
+                            var statusClass = r.Status switch
+                            {
+                                "Onaylandı" => "sb-green",
+                                "Beklemede" => "sb-yellow",
+                                "İptal Edildi" => "sb-red",
+                                _ => "sb-yellow"
+                            };
+
+                            <tr>
+                                <td>
+                                    <span style="font-weight:700;">@r.Name</span>
+                                    @if (!string.IsNullOrWhiteSpace(r.Email))
+                                    {
+                                        <div style="font-size:11.5px;color:var(--muted);">@r.Email</div>
+                                    }
+                                </td>
+                                <td><span style="color:var(--muted);">@r.Phone</span></td>
+                                <td>@r.ReservationDate.ToString("dd MMM yyyy")</td>
+                                <td>@r.ReservationTime.ToString(@"hh\:mm")</td>
+                                <td>
+                                    <span class="guest-chip">
+                                        <i class="bi bi-people-fill" style="font-size:10px;"></i>
+                                        @r.GuestCount
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="s-badge @statusClass">
+                                        <span class="s-dot"></span>@r.Status
+                                    </span>
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrWhiteSpace(r.Description))
+                                    {
+                                        <span style="font-size:12px;color:var(--muted);font-style:italic;">@r.Description</span>
+                                    }
+                                    else
+                                    {
+                                        <span style="font-size:12px;color:#ddd;">—</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-center gap-1">
+                                        <a href="/Reservation/UpdateReservation/@r.ReservationId"
+                                           class="btn-xs bx-edit" data-tip="Düzenle">
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </a>
+                                        <a href="/Reservation/ApproveReservation/@r.ReservationId?returnUrl=/Dashboard/Index"
+                                           class="btn-xs bx-ok" data-tip="Onayla">
+                                            <i class="bi bi-check-lg"></i>
+                                        </a>
+                                        <a href="/Reservation/CancelReservation/@r.ReservationId?returnUrl=/Dashboard/Index"
+                                           class="btn-xs bx-cancel" data-tip="İptal Et">
+                                            <i class="bi bi-x-lg"></i>
+                                        </a>
+                                        <button class="btn-xs bx-del" data-tip="Sil"
+                                                onclick="confirmDelete(@r.ReservationId, '@r.Name')">
+                                            <i class="bi bi-trash3-fill"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>

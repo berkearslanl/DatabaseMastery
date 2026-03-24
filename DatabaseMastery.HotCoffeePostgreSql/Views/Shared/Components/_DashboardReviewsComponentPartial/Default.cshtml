@@ -1,0 +1,74 @@
+@using DatabaseMastery.HotCoffeePostgreSql.Entities
+
+@{
+    var reviews = ViewBag.LatestReviews as List<Review>;
+    var avatarColors = new[] { "var(--accent-dark)", "var(--purple)", "var(--teal)", "var(--blue)", "var(--green)" };
+}
+
+<div class="col-xl-4 col-md-6">
+    <div class="dash-card h-100">
+        <div class="dash-card-header">
+            <div>
+                <div class="section-title">Son Değerlendirmeler</div>
+                <div class="section-sub">Müşteri yorumları</div>
+            </div>
+            <a href="/Review/ReviewList/" class="view-all">Tümü <i class="bi bi-arrow-right"></i></a>
+        </div>
+        <div class="dash-card-body pt-0">
+            @if (reviews != null && reviews.Any())
+            {
+                int idx = 0;
+                @foreach (var review in reviews)
+                {
+                    var nameParts = review.CustomerName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                    var initials = nameParts.Length >= 2
+                        ? (nameParts[0][0].ToString() + nameParts[nameParts.Length - 1][0].ToString()).ToUpper()
+                        : review.CustomerName.Substring(0, Math.Min(2, review.CustomerName.Length)).ToUpper();
+
+                    var color = avatarColors[idx % avatarColors.Length];
+                    var filledStars = new string('★', review.Rating);
+                    var emptyStars = new string('★', 5 - review.Rating);
+
+                    // Zaman farkı hesapla
+                    var diff = DateTime.UtcNow - review.CreatedAt;
+                    string timeAgo;
+                    if (diff.TotalMinutes < 60)
+                        timeAgo = $"{(int)diff.TotalMinutes} dk önce";
+                    else if (diff.TotalHours < 24)
+                        timeAgo = $"{(int)diff.TotalHours} saat önce";
+                    else if (diff.TotalDays < 2)
+                        timeAgo = "Dün";
+                    else if (diff.TotalDays < 7)
+                        timeAgo = $"{(int)diff.TotalDays} gün önce";
+                    else
+                        timeAgo = review.CreatedAt.ToString("dd MMM yyyy");
+
+                    var commentPreview = review.Comment.Length > 80
+                        ? review.Comment.Substring(0, 80) + "..."
+                        : review.Comment;
+
+                    <div class="review-item">
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <div class="review-avatar" style="background:@color;">@initials</div>
+                            <div>
+                                <div class="review-name">@review.CustomerName</div>
+                                <div class="review-date">@timeAgo · @review.Product?.ProductName</div>
+                            </div>
+                            <div class="ms-auto review-stars">@filledStars<span style="color:#ddd;">@emptyStars</span></div>
+                        </div>
+                        <div class="review-text">"@commentPreview"</div>
+                    </div>
+
+                    idx++;
+                }
+            }
+            else
+            {
+                <div style="text-align:center;padding:30px 10px;color:var(--muted);">
+                    <i class="bi bi-chat-square-text" style="font-size:32px;display:block;margin-bottom:8px;opacity:0.3;"></i>
+                    <div style="font-size:13px;">Henüz değerlendirme yok</div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,233 @@
+@{
+    ViewData["Title"] = "Ayarlar";
+    Layout = "~/Views/AdminLayout/Index.cshtml";
+}
+
+<style>
+    :root {
+        --accent:#e6a03c; --accent-dark:#c8861e; --accent-soft:rgba(230,160,60,0.10);
+        --green:#22c55e; --green-soft:rgba(34,197,94,0.10); --red:#ef4444; --red-soft:rgba(239,68,68,0.10);
+        --border:#eeebe5; --muted:#9a9590; --text:#1a1a1a; --text2:#6b6460;
+        --radius:14px; --radius-sm:9px; --tr:all 0.22s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    .pg-header { display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin-bottom:28px; }
+    .pg-title { font-family:'Playfair Display',serif; font-size:23px; font-weight:700; color:#1a1a1a; margin:0 0 4px; }
+    .pg-desc { font-size:13px; color:#999; margin:0; }
+
+    .settings-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+
+    .s-card { background:#fff; border:1px solid var(--border); border-radius:var(--radius); box-shadow:0 2px 14px rgba(0,0,0,0.05); overflow:hidden; }
+    .s-card-head { padding:18px 22px 15px; border-bottom:1px solid #f5f2ee; display:flex; align-items:center; gap:10px; }
+    .s-head-icon { width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+    .s-head-title { font-size:14px; font-weight:700; color:var(--text); margin:0 0 2px; }
+    .s-head-sub { font-size:12px; color:var(--muted); margin:0; }
+    .s-card-body { padding:22px; }
+
+    /* THEME TOGGLE */
+    .theme-options { display:flex; gap:12px; }
+    .theme-opt { flex:1; position:relative; cursor:pointer; }
+    .theme-opt input { position:absolute; opacity:0; width:0; height:0; }
+    .theme-opt label {
+        display:flex; flex-direction:column; align-items:center; gap:10px;
+        padding:20px 16px; border:2px solid var(--border); border-radius:12px;
+        cursor:pointer; transition:var(--tr); background:#fdfcfb; text-align:center;
+    }
+    .theme-opt label:hover { border-color:#d8d2c8; }
+    .theme-opt input:checked + label { border-color:var(--accent); box-shadow:0 0 0 3px rgba(230,160,60,0.15); }
+    .theme-preview { width:100%; height:60px; border-radius:8px; border:1px solid #eee; overflow:hidden; display:flex; }
+    .tp-light { background:#fff; flex:1; }
+    .tp-light .tp-bar { height:100%; width:30%; background:#f5f2ee; }
+    .tp-dark { background:#1a1a1a; flex:1; }
+    .tp-dark .tp-bar { height:100%; width:30%; background:#2a2a2a; }
+    .theme-label { font-size:13px; font-weight:700; color:var(--text); }
+    .theme-check { width:20px; height:20px; border-radius:50%; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:10px; color:transparent; transition:var(--tr); }
+    .theme-opt input:checked + label .theme-check { border-color:var(--accent); background:var(--accent); color:#fff; }
+
+    /* FONT SIZE */
+    .font-slider-wrap { padding:10px 0; }
+    .font-labels { display:flex; justify-content:space-between; margin-bottom:12px; }
+    .font-labels span { font-size:12px; color:var(--muted); font-weight:500; }
+    .font-value { text-align:center; font-size:28px; font-weight:800; color:var(--accent-dark); margin-bottom:14px; font-family:'Playfair Display',serif; }
+    .font-range { width:100%; -webkit-appearance:none; height:6px; background:#eeebe5; border-radius:6px; outline:none; }
+    .font-range::-webkit-slider-thumb { -webkit-appearance:none; width:22px; height:22px; background:linear-gradient(135deg,var(--accent),var(--accent-dark)); border-radius:50%; cursor:pointer; box-shadow:0 2px 8px rgba(230,160,60,0.35); }
+    .font-preview { margin-top:16px; padding:14px; background:#f9f7f4; border-radius:10px; border:1px solid #f0ede8; }
+    .font-preview p { margin:0; color:var(--text2); line-height:1.6; }
+
+    /* CREDENTIALS FORM */
+    .fg { margin-bottom:18px; }
+    .fg:last-child { margin-bottom:0; }
+    .fl { display:flex; align-items:center; justify-content:space-between; margin-bottom:7px; }
+    .fl label { font-size:13px; font-weight:650; color:var(--text2); }
+    .fi-wrap { position:relative; }
+    .fi-wrap .fi-ico { position:absolute; left:12px; top:50%; transform:translateY(-50%); font-size:15px; color:#c5bfb9; pointer-events:none; transition:color 0.2s; }
+    .fi-wrap:focus-within .fi-ico { color:var(--accent-dark); }
+    .f-input { width:100%; padding:11px 14px 11px 40px; border:1.5px solid var(--border); border-radius:var(--radius-sm); font-size:14px; font-family:'DM Sans',sans-serif; color:var(--text); background:#fdfcfb; outline:none; transition:var(--tr); }
+    .f-input::placeholder { color:#c5bfb9; }
+    .f-input:focus { border-color:var(--accent); background:#fff; box-shadow:0 0 0 3.5px rgba(230,160,60,0.12); }
+    .btn-save { display:inline-flex; align-items:center; gap:8px; background:linear-gradient(135deg,var(--accent),var(--accent-dark)); color:#fff; border:none; padding:11px 22px; border-radius:11px; font-size:13.5px; font-weight:600; cursor:pointer; transition:var(--tr); box-shadow:0 4px 16px rgba(230,160,60,0.30); font-family:'DM Sans',sans-serif; }
+    .btn-save:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(230,160,60,0.40); }
+
+    .alert-box { padding:12px 16px; border-radius:10px; font-size:13px; font-weight:600; display:flex; align-items:center; gap:8px; margin-bottom:16px; }
+    .alert-success { background:var(--green-soft); color:#15803d; border:1px solid rgba(34,197,94,0.2); }
+    .alert-error { background:var(--red-soft); color:#dc2626; border:1px solid rgba(239,68,68,0.2); }
+
+    @@media (max-width:991.98px) { .settings-grid { grid-template-columns:1fr; } }
+</style>
+
+<div class="pg-header">
+    <div>
+        <h1 class="pg-title">
+            <i class="bi bi-gear-fill me-2" style="color:var(--accent);font-size:20px;vertical-align:middle;"></i>
+            Ayarlar
+        </h1>
+        <p class="pg-desc">Panel görünümünü ve hesap bilgilerinizi yönetin.</p>
+    </div>
+</div>
+
+<div class="settings-grid">
+
+    <!-- THEME -->
+    <div class="s-card">
+        <div class="s-card-head">
+            <div class="s-head-icon" style="background:rgba(139,92,246,0.1);color:#8b5cf6;"><i class="bi bi-palette-fill"></i></div>
+            <div>
+                <div class="s-head-title">Tema</div>
+                <div class="s-head-sub">Açık veya koyu tema seçin</div>
+            </div>
+        </div>
+        <div class="s-card-body">
+            <div class="theme-options">
+                <div class="theme-opt">
+                    <input type="radio" name="theme" id="themeLight" value="light" checked onchange="setTheme('light')" />
+                    <label for="themeLight">
+                        <div class="theme-preview"><div class="tp-light"><div class="tp-bar"></div></div></div>
+                        <span class="theme-label">Açık Tema</span>
+                        <div class="theme-check"><i class="bi bi-check"></i></div>
+                    </label>
+                </div>
+                <div class="theme-opt">
+                    <input type="radio" name="theme" id="themeDark" value="dark" onchange="setTheme('dark')" />
+                    <label for="themeDark">
+                        <div class="theme-preview"><div class="tp-dark"><div class="tp-bar"></div></div></div>
+                        <span class="theme-label">Koyu Tema</span>
+                        <div class="theme-check"><i class="bi bi-check"></i></div>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FONT SIZE -->
+    <div class="s-card">
+        <div class="s-card-head">
+            <div class="s-head-icon" style="background:rgba(59,130,246,0.1);color:#3b82f6;"><i class="bi bi-fonts"></i></div>
+            <div>
+                <div class="s-head-title">Font Boyutu</div>
+                <div class="s-head-sub">Metin boyutunu ayarlayın</div>
+            </div>
+        </div>
+        <div class="s-card-body">
+            <div class="font-slider-wrap">
+                <div class="font-value" id="fontValue">14px</div>
+                <div class="font-labels">
+                    <span>12px</span>
+                    <span>15px</span>
+                    <span>18px</span>
+                </div>
+                <input type="range" class="font-range" id="fontSlider" min="12" max="18" value="14" step="1" oninput="setFontSize(this.value)" />
+                <div class="font-preview">
+                    <p id="fontPreview" style="font-size:14px;">Bu metin, seçtiğiniz font boyutunda görünecektir. Farklı boyutları deneyerek en uygun olanı seçebilirsiniz.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CREDENTIALS -->
+    <div class="s-card" style="grid-column:1/-1;">
+        <div class="s-card-head">
+            <div class="s-head-icon" style="background:rgba(239,68,68,0.1);color:#ef4444;"><i class="bi bi-shield-lock-fill"></i></div>
+            <div>
+                <div class="s-head-title">Hesap Bilgileri</div>
+                <div class="s-head-sub">Kullanıcı adı ve şifrenizi değiştirin</div>
+            </div>
+        </div>
+        <div class="s-card-body">
+            @if (TempData["CredentialSuccess"] != null)
+            {
+                <div class="alert-box alert-success">
+                    <i class="bi bi-check-circle-fill"></i> @TempData["CredentialSuccess"]
+                </div>
+            }
+            @if (TempData["CredentialError"] != null)
+            {
+                <div class="alert-box alert-error">
+                    <i class="bi bi-exclamation-triangle-fill"></i> @TempData["CredentialError"]
+                </div>
+            }
+
+            <form method="post" asp-action="UpdateCredentials" asp-controller="Settings" style="max-width:500px;">
+                <div class="fg">
+                    <div class="fl"><label for="username">Kullanıcı Adı</label></div>
+                    <div class="fi-wrap">
+                        <i class="bi bi-person-fill fi-ico"></i>
+                        <input type="text" id="username" name="username" class="f-input"
+                               value="@ViewBag.Username" placeholder="Yeni kullanıcı adı" />
+                    </div>
+                </div>
+                <div class="fg">
+                    <div class="fl"><label for="currentPassword">Mevcut Şifre</label></div>
+                    <div class="fi-wrap">
+                        <i class="bi bi-lock-fill fi-ico"></i>
+                        <input type="password" id="currentPassword" name="currentPassword" class="f-input"
+                               placeholder="Mevcut şifrenizi girin" required />
+                    </div>
+                </div>
+                <div class="fg">
+                    <div class="fl"><label for="newPassword">Yeni Şifre</label></div>
+                    <div class="fi-wrap">
+                        <i class="bi bi-key-fill fi-ico"></i>
+                        <input type="password" id="newPassword" name="newPassword" class="f-input"
+                               placeholder="Yeni şifre (boş bırakırsanız değişmez)" />
+                    </div>
+                </div>
+                <button type="submit" class="btn-save" style="margin-top:6px;">
+                    <i class="bi bi-check-circle-fill"></i> Değişiklikleri Kaydet
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    // THEME
+    function setTheme(theme) {
+        document.body.setAttribute('data-theme', theme);
+        localStorage.setItem('admin-theme', theme);
+    }
+
+    // FONT SIZE
+    function setFontSize(size) {
+        document.getElementById('fontValue').textContent = size + 'px';
+        document.getElementById('fontPreview').style.fontSize = size + 'px';
+        document.documentElement.style.setProperty('--base-font', size + 'px');
+        document.body.style.fontSize = size + 'px';
+        localStorage.setItem('admin-font-size', size);
+    }
+
+    // LOAD SAVED SETTINGS
+    (function() {
+        var savedTheme = localStorage.getItem('admin-theme') || 'light';
+        var savedFont = localStorage.getItem('admin-font-size') || '14';
+
+        // Theme
+        document.getElementById(savedTheme === 'dark' ? 'themeDark' : 'themeLight').checked = true;
+
+        // Font
+        document.getElementById('fontSlider').value = savedFont;
+        document.getElementById('fontValue').textContent = savedFont + 'px';
+        document.getElementById('fontPreview').style.fontSize = savedFont + 'px';
+    })();
+</script>
+}

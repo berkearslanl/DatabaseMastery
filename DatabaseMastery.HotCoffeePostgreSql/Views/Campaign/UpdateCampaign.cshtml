@@ -1,0 +1,236 @@
+@model GetCampaignByIdDto
+@{
+    ViewData["Title"] = "Kampanya Düzenle";
+    Layout = "~/Views/AdminLayout/Index.cshtml";
+}
+
+<style>
+    :root {
+        --accent:#e6a03c; --accent-dark:#c8861e; --accent-soft:rgba(230,160,60,0.10); --accent-glow:rgba(230,160,60,0.22);
+        --green:#22c55e; --green-soft:rgba(34,197,94,0.10); --red:#ef4444; --border:#eeebe5; --muted:#9a9590;
+        --text:#1a1a1a; --text2:#6b6460; --radius:14px; --radius-sm:9px; --tr:all 0.22s cubic-bezier(0.4,0,0.2,1);
+    }
+    .edit-header { display:flex; align-items:center; gap:14px; margin-bottom:28px; animation:fadeDown 0.4s ease both; }
+    .back-btn { width:40px; height:40px; border-radius:11px; border:1px solid var(--border); background:#fff; display:flex; align-items:center; justify-content:center; font-size:17px; color:var(--text2); text-decoration:none; transition:var(--tr); flex-shrink:0; box-shadow:0 1px 4px rgba(0,0,0,0.05); }
+    .back-btn:hover { border-color:var(--accent); color:var(--accent-dark); background:var(--accent-soft); transform:translateX(-2px); }
+    .edit-title { font-family:'Playfair Display',serif; font-size:22px; font-weight:700; color:var(--text); margin:0 0 3px; line-height:1.2; }
+    .edit-desc { font-size:13px; color:var(--muted); margin:0; }
+    .bc-bar { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--muted); margin-bottom:22px; animation:fadeDown 0.4s 0.05s ease both; }
+    .bc-bar a { color:var(--muted); text-decoration:none; transition:color 0.15s; }
+    .bc-bar a:hover { color:var(--accent-dark); }
+    .bc-cur { color:var(--text2); font-weight:600; }
+    .edit-layout { display:grid; grid-template-columns:1fr 340px; gap:20px; align-items:start; animation:fadeUp 0.4s 0.08s ease both; }
+    .f-card { background:#fff; border:1px solid var(--border); border-radius:var(--radius); box-shadow:0 2px 14px rgba(0,0,0,0.05); overflow:hidden; margin-bottom:18px; }
+    .f-card:last-child { margin-bottom:0; }
+    .f-card-head { padding:18px 22px 15px; border-bottom:1px solid #f5f2ee; display:flex; align-items:center; gap:10px; }
+    .head-icon { width:34px; height:34px; border-radius:9px; background:var(--accent-soft); display:flex; align-items:center; justify-content:center; font-size:15px; color:var(--accent-dark); flex-shrink:0; }
+    .head-title { font-size:14px; font-weight:700; color:var(--text); margin:0 0 2px; }
+    .head-sub { font-size:12px; color:var(--muted); margin:0; }
+    .f-card-body { padding:22px; }
+    .fg { margin-bottom:20px; }
+    .fg:last-child { margin-bottom:0; }
+    .fl { display:flex; align-items:center; justify-content:space-between; margin-bottom:7px; }
+    .fl label { font-size:13px; font-weight:650; color:var(--text2); }
+    .lbl-req { font-size:11px; color:var(--red); font-weight:600; }
+    .fi-wrap { position:relative; }
+    .fi-wrap .fi-ico { position:absolute; left:12px; top:50%; transform:translateY(-50%); font-size:15px; color:#c5bfb9; pointer-events:none; transition:color 0.2s; }
+    .fi-wrap:focus-within .fi-ico { color:var(--accent-dark); }
+    .f-input { width:100%; padding:11px 14px; border:1.5px solid var(--border); border-radius:var(--radius-sm); font-size:14px; font-family:'DM Sans',sans-serif; color:var(--text); background:#fdfcfb; outline:none; transition:var(--tr); box-shadow:0 1px 3px rgba(0,0,0,0.03); }
+    .f-input-pl { padding-left:40px; }
+    .f-input::placeholder { color:#c5bfb9; }
+    .f-input:hover { border-color:#d8d2c8; background:#fff; }
+    .f-input:focus { border-color:var(--accent); background:#fff; box-shadow:0 0 0 3.5px var(--accent-glow); }
+    .f-textarea { min-height:90px; resize:vertical; }
+    .f-hint { margin-top:6px; font-size:12px; color:var(--muted); display:flex; align-items:center; gap:5px; }
+
+    .st-wrap { display:flex; gap:10px; }
+    .st-opt { flex:1; position:relative; }
+    .st-opt input[type="radio"] { position:absolute; opacity:0; width:0; height:0; }
+    .st-opt label { display:flex; align-items:center; gap:10px; padding:12px 15px; border:1.5px solid var(--border); border-radius:var(--radius-sm); cursor:pointer; transition:var(--tr); background:#fdfcfb; user-select:none; }
+    .st-opt label:hover { border-color:#d8d2c8; background:#fff; }
+    .st-opt.opt-a input:checked+label { border-color:var(--green); background:#fff; box-shadow:0 0 0 3px var(--green-soft); }
+    .st-opt.opt-p input:checked+label { border-color:var(--red); background:#fff; box-shadow:0 0 0 3px rgba(239,68,68,0.10); }
+    .so-ico { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+    .opt-a .so-ico { background:var(--green-soft); color:#16a34a; }
+    .opt-p .so-ico { background:rgba(239,68,68,0.10); color:var(--red); }
+    .so-lbl { font-size:13.5px; font-weight:700; color:var(--text); display:block; }
+    .so-sub { font-size:11px; color:var(--muted); display:block; }
+    .so-chk { margin-left:auto; width:18px; height:18px; border-radius:50%; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:9px; color:transparent; transition:var(--tr); flex-shrink:0; }
+    .opt-a input:checked+label .so-chk { border-color:var(--green); background:var(--green); color:#fff; }
+    .opt-p input:checked+label .so-chk { border-color:var(--red); background:var(--red); color:#fff; }
+
+    .sub-card { background:#fff; border:1px solid var(--border); border-radius:var(--radius); box-shadow:0 2px 14px rgba(0,0,0,0.05); padding:18px; margin-bottom:16px; display:flex; flex-direction:column; gap:10px; }
+    .btn-sub { width:100%; display:flex; align-items:center; justify-content:center; gap:9px; background:linear-gradient(135deg,var(--accent),var(--accent-dark)); color:#fff; border:none; padding:13px 22px; border-radius:11px; font-size:14px; font-weight:700; cursor:pointer; transition:var(--tr); box-shadow:0 4px 16px rgba(230,160,60,0.30); font-family:'DM Sans',sans-serif; }
+    .btn-sub:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(230,160,60,0.42); }
+    .btn-sub:active { transform:translateY(0); }
+    .btn-sub.loading { pointer-events:none; opacity:0.85; }
+    .btn-back { width:100%; display:flex; align-items:center; justify-content:center; gap:8px; background:transparent; color:var(--text2); border:1.5px solid var(--border); padding:11px 22px; border-radius:11px; font-size:13.5px; font-weight:600; cursor:pointer; transition:var(--tr); font-family:'DM Sans',sans-serif; text-decoration:none; }
+    .btn-back:hover { border-color:#d8d2c8; background:#fdfcfb; color:var(--text); }
+
+    .date-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+
+    @@keyframes fadeDown { from { opacity:0; transform:translateY(-10px); } to { opacity:1; transform:translateY(0); } }
+    @@keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+    @@keyframes spin { to { transform:rotate(360deg); } }
+    .spin { animation:spin 0.8s linear infinite; }
+    @@media (max-width:991.98px) { .edit-layout { grid-template-columns:1fr; } .right-col { order:-1; } }
+    @@media (max-width:575.98px) { .st-wrap { flex-direction:column; } .date-row { grid-template-columns:1fr; } }
+</style>
+
+<div class="bc-bar">
+    <a href="/Dashboard/Index"><i class="bi bi-house-fill" style="font-size:11px;"></i></a>
+    <span style="opacity:.4;"><i class="bi bi-chevron-right" style="font-size:10px;"></i></span>
+    <a href="/Campaign/CampaignList">Kampanya Yönetimi</a>
+    <span style="opacity:.4;"><i class="bi bi-chevron-right" style="font-size:10px;"></i></span>
+    <span class="bc-cur">Kampanya Düzenle</span>
+</div>
+
+<div class="edit-header">
+    <a href="/Campaign/CampaignList" class="back-btn" title="Geri"><i class="bi bi-arrow-left"></i></a>
+    <div>
+        <h1 class="edit-title">
+            <i class="bi bi-pencil-fill me-2" style="color:var(--accent);font-size:19px;vertical-align:middle;"></i>
+            Kampanya Düzenle
+        </h1>
+        <p class="edit-desc">Kampanya bilgilerini güncelleyin.</p>
+    </div>
+</div>
+
+<form id="editForm" asp-action="UpdateCampaign" asp-controller="Campaign" method="post" novalidate>
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="CampaignId" asp-for="CampaignId" />
+
+    <div class="edit-layout">
+        <div>
+            <div class="f-card">
+                <div class="f-card-head">
+                    <div class="head-icon"><i class="bi bi-info-circle-fill"></i></div>
+                    <div>
+                        <div class="head-title">Genel Bilgiler</div>
+                        <div class="head-sub">Kampanya detayları ve indirim oranı</div>
+                    </div>
+                </div>
+                <div class="f-card-body">
+                    <div class="fg">
+                        <div class="fl">
+                            <label for="Title">Kampanya Başlığı</label>
+                            <span class="lbl-req">* Zorunlu</span>
+                        </div>
+                        <div class="fi-wrap">
+                            <i class="bi bi-megaphone-fill fi-ico"></i>
+                            <input type="text" id="Title" name="Title" asp-for="Title"
+                                   class="f-input f-input-pl" placeholder="Kampanya başlığı..."
+                                   maxlength="100" autocomplete="off" />
+                        </div>
+                    </div>
+
+                    <div class="fg">
+                        <div class="fl">
+                            <label for="Description">Açıklama</label>
+                            <span class="lbl-req">* Zorunlu</span>
+                        </div>
+                        <textarea id="Description" name="Description" asp-for="Description"
+                                  class="f-input f-textarea" placeholder="Kampanya detayları..."
+                                  maxlength="500"></textarea>
+                    </div>
+
+                    <div class="fg">
+                        <div class="fl">
+                            <label for="DiscountPercentage">İndirim Yüzdesi</label>
+                            <span class="lbl-req">* Zorunlu</span>
+                        </div>
+                        <div class="fi-wrap">
+                            <i class="bi bi-percent fi-ico"></i>
+                            <input type="number" id="DiscountPercentage" name="DiscountPercentage" asp-for="DiscountPercentage"
+                                   class="f-input f-input-pl" min="1" max="100" />
+                        </div>
+                        <div class="f-hint"><i class="bi bi-info-circle" style="color:var(--accent);"></i> 1 ile 100 arasında bir değer girin.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="f-card">
+                <div class="f-card-head">
+                    <div class="head-icon"><i class="bi bi-calendar3"></i></div>
+                    <div>
+                        <div class="head-title">Tarih Aralığı</div>
+                        <div class="head-sub">Kampanyanın aktif olacağı tarihler</div>
+                    </div>
+                </div>
+                <div class="f-card-body">
+                    <div class="date-row">
+                        <div class="fg">
+                            <div class="fl">
+                                <label for="StartDate">Başlangıç Tarihi</label>
+                                <span class="lbl-req">* Zorunlu</span>
+                            </div>
+                            <input type="date" id="StartDate" name="StartDate" asp-for="StartDate" class="f-input"
+                                   value="@Model.StartDate.ToString("yyyy-MM-dd")" />
+                        </div>
+                        <div class="fg">
+                            <div class="fl">
+                                <label for="EndDate">Bitiş Tarihi</label>
+                                <span class="lbl-req">* Zorunlu</span>
+                            </div>
+                            <input type="date" id="EndDate" name="EndDate" asp-for="EndDate" class="f-input"
+                                   value="@Model.EndDate.ToString("yyyy-MM-dd")" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="f-card">
+                <div class="f-card-head">
+                    <div class="head-icon"><i class="bi bi-toggles"></i></div>
+                    <div>
+                        <div class="head-title">Yayın Durumu</div>
+                        <div class="head-sub">Kampanyanın görünürlüğünü ayarlayın</div>
+                    </div>
+                </div>
+                <div class="f-card-body">
+                    <div class="st-wrap">
+                        <div class="st-opt opt-a">
+                            <input type="radio" name="Status" id="stA" value="true" @(Model.Status ? "checked" : "") />
+                            <label for="stA">
+                                <div class="so-ico"><i class="bi bi-check-circle-fill"></i></div>
+                                <div><span class="so-lbl">Aktif</span><span class="so-sub">Müşterilere görünür</span></div>
+                                <div class="so-chk"><i class="bi bi-check"></i></div>
+                            </label>
+                        </div>
+                        <div class="st-opt opt-p">
+                            <input type="radio" name="Status" id="stP" value="false" @(!Model.Status ? "checked" : "") />
+                            <label for="stP">
+                                <div class="so-ico"><i class="bi bi-pause-circle-fill"></i></div>
+                                <div><span class="so-lbl">Pasif</span><span class="so-sub">Müşterilere gizli</span></div>
+                                <div class="so-chk"><i class="bi bi-check"></i></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-col" style="display:flex;flex-direction:column;gap:16px;">
+            <div class="sub-card">
+                <button type="submit" class="btn-sub" id="submitBtn">
+                    <i class="bi bi-check-circle-fill"></i> Değişiklikleri Kaydet
+                </button>
+                <a href="/Campaign/CampaignList" class="btn-back">
+                    <i class="bi bi-x-lg"></i> Vazgeç
+                </a>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+<script>
+    document.getElementById('editForm').addEventListener('submit', function(e) {
+        var title = document.getElementById('Title').value.trim();
+        if (!title) { e.preventDefault(); document.getElementById('Title').focus(); return; }
+        var btn = document.getElementById('submitBtn');
+        btn.classList.add('loading');
+        btn.innerHTML = '<i class="bi bi-arrow-repeat spin"></i> Kaydediliyor...';
+    });
+</script>
+}
