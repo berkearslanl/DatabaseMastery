@@ -27,7 +27,7 @@ PostgreSQL kullanılarak geliştirilmiş bir **kafe/restaurant yönetim sistemi*
 
 ## 🧩 Yakında Eklenecek Projeler
 
-🔜 Bu seri toplamda **4 farklı veritabanı teknolojisini** kapsayacak şekilde genişletilecektir.
+🔜 Bu seri toplamda **3 farklı veritabanı teknolojisini** kapsayacak şekilde genişletilecektir.
 
 Yakında eklenecek projeler ile birlikte:
 
