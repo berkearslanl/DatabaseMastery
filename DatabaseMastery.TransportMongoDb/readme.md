@@ -1,6 +1,6 @@
 # Lojistik ve Kargo Yönetim Platformu - Database Mastery #1
 
-Bu proje, 4 farklı veritabanı teknolojisinin kullanıldığı **"Database Mastery"** eğitim serisinin ilk ayağı olarak geliştirilmiş, kapsamlı bir lojistik ve kargo takip otomasyonudur. ASP.NET Core MVC mimarisi ve NoSQL gücünü barındıran **MongoDB** kullanılarak inşa edilmiş olup, hem son kullanıcılar için dinamik bir web arayüzü hem de yöneticiler için detaylı bir kontrol paneli sunmaktadır.
+Bu proje, 3 farklı veritabanı teknolojisinin kullanıldığı **"Database Mastery"** eğitim serisinin ilk ayağı olarak geliştirilmiş, kapsamlı bir lojistik ve kargo takip otomasyonudur. ASP.NET Core MVC mimarisi ve NoSQL gücünü barındıran **MongoDB** kullanılarak inşa edilmiş olup, hem son kullanıcılar için dinamik bir web arayüzü hem de yöneticiler için detaylı bir kontrol paneli sunmaktadır.
 
 ## 🌟 Öne Çıkan Özellikler
 
