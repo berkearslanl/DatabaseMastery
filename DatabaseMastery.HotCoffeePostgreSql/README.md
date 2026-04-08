@@ -1,6 +1,6 @@
 # ☕ Kafe & Restoran Yönetim Sistemi - Database Mastery #2
 
-Bu proje, 4 farklı veritabanı teknolojisinin kullanıldığı **"Database Mastery"** eğitim serisinin ikinci ayağı olarak geliştirilmiş, kapsamlı bir **kafe ve restoran yönetim sistemidir**. ASP.NET Core MVC mimarisi ve ilişkisel veritabanı gücünü barındıran **PostgreSQL** kullanılarak inşa edilmiştir.
+Bu proje, 3 farklı veritabanı teknolojisinin kullanıldığı **"Database Mastery"** eğitim serisinin ikinci ayağı olarak geliştirilmiş, kapsamlı bir **kafe ve restoran yönetim sistemidir**. ASP.NET Core MVC mimarisi ve ilişkisel veritabanı gücünü barındıran **PostgreSQL** kullanılarak inşa edilmiştir.
 
 Proje; hem son kullanıcılar için modern ve dinamik bir web arayüzü hem de yöneticiler için gelişmiş bir **admin paneli** sunmaktadır. İlişkisel veri modeli sayesinde veri bütünlüğü ve güçlü sorgulama kabiliyeti ön planda tutulmuştur.
 
